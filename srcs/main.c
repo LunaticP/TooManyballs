@@ -29,8 +29,11 @@ void	draw_ray(SDL_Renderer *rend)
 	SDL_SetRenderDrawColor(rend, 0x00, 0xFF, 0x00, 0xFF);
 	vx = (float)x / ((float)WIN_WIDTH / 2.0f) - 1.0f;
 	vy = cos(vx * (M_PI_2 - 0.08f));
-	x = (WIN_WIDTH / 2) + vx * 250.0f;
-	y = (WIN_HEIGHT - 20) - vy * 250.0f;
+	l = sqrt((vx * vx) + (vy * vy));
+	vx /= l;
+	vy /= l;
+	x = (WIN_WIDTH / 2) + vx * 350.0f;
+	y = (WIN_HEIGHT - 20) - vy * 350.0f;
 	SDL_RenderDrawLine(rend, WIN_WIDTH / 2, WIN_HEIGHT - 20, x, y);
 }
 
@@ -64,7 +67,7 @@ int		main(void)
 	SDL_Surface		*surface;
 
 	SDL_Init(SDL_INIT_VIDEO);
-	win = SDL_CreateWindow("Too Many Balls", 100, 100, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_BORDERLESS);
+	win = SDL_CreateWindow("Too Many Balls", 0, 0, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_FULLSCREEN_DESKTOP);
     surface = SDL_GetWindowSurface(win);
     rend = SDL_CreateSoftwareRenderer(surface);
 	while (TRUE) {
