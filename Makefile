@@ -6,7 +6,7 @@
 #    By: gudemare <gudemare@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/09/18 01:13:53 by gudemare          #+#    #+#              #
-#    Updated: 2017/08/30 20:54:45 by gudemare         ###   ########.fr        #
+#    Updated: 2017/08/30 21:30:42 by aviau            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,14 +17,18 @@ NAME			=	TooManyBalls
 #==============================================================================#
 
 CC				=	clang
-CFLAGS			=	-Wall -Wextra -Werror
+CFLAGS			=	-Wall -Wextra #-Werror
 
 LIBS			=	libft
 LIBFT_DIR		=	libft
 
-HEADERS_LIB		=	libft/includes
+SDL2_HEADERS	=	/Library/Frameworks/SDL2.framework/Versions/A/Headers
+SDL2_FRAMEWORK	=	/Library/Frameworks/
+FFLAGS			=	-F $(SDL2_FRAMEWORK) -framework SDL2
+
+HEADERS_LIB		=	libft/includes/
 HEADERS_DIR		=	includes/
-HFLAGS			=	-I $(HEADERS_DIR) -I $(HEADERS_LIB)
+HFLAGS			=	-I $(HEADERS_DIR) -I $(HEADERS_LIB) -I $(SDL2_HEADERS)
 
 LFLAGS			=	-lft -L$(LIBFT_DIR)
 SRCS_DIR		=	srcs/
@@ -72,8 +76,9 @@ WHITE_BG		=	\e[47m
 all: $(NAME)
 
 $(NAME) : $(LIBS) $(OBJS)
-	@$(CC) $(CFLAGS) $(HFLAGS) $(LFLAGS) $(OBJS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(HFLAGS) $(LFLAGS) $(FFLAGS) $(OBJS) -o $(NAME)
 	@printf "$(GREEN)The program $(BOLD)$(NAME)$(END_GRAPHICS)$(GREEN) has successfully compiled.$(END_GRAPHICS)\n"
+@printf "$(MAGENTA)Warning : -Werror is disabled\n$(END_GRAPHICS)"
 
 $(LIBS) :
 	@printf "\e[K$(CYAN)Compiling $(BOLD)libft$(END_GRAPHICS)$(CYAN) ...\n\e[A$(END_GRAPHICS)"
@@ -83,7 +88,7 @@ $(LIBS) :
 $(OBJS_DIR)%.o : $(SRCS_DIR)%.c
 	@mkdir -p $(OBJS_DIR)
 	@printf "\e[K$(CYAN)Compiling $(BOLD)$(notdir $<)$(END_GRAPHICS)$(CYAN) ...\n\e[A$(END_GRAPHICS)"
-	@$(CC) $(CFLAGS) $(HFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(HFLAGS) $(FFLAGS) -c $< -o $@
 
 clean :
 	@rm -rf $(OBJS_DIR)
