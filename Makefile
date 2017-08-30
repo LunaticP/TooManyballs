@@ -6,7 +6,7 @@
 #    By: gudemare <gudemare@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/09/18 01:13:53 by gudemare          #+#    #+#              #
-#    Updated: 2017/08/30 21:30:42 by aviau            ###   ########.fr        #
+#    Updated: 2017/08/31 00:40:12 by aviau            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,8 @@ HFLAGS			=	-I $(HEADERS_DIR) -I $(HEADERS_LIB) -I $(SDL2_HEADERS)
 LFLAGS			=	-lft -L$(LIBFT_DIR)
 SRCS_DIR		=	srcs/
 SRCS_LIST		=	\
-					main.c
+					main.c\
+					draw.c
 SRCS			=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 
 OBJS_DIR		=	./objs/

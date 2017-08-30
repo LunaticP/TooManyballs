@@ -9,4 +9,6 @@
 # define TRUE	1
 # define FALSE	0
 
+void	draw(SDL_Renderer *rend);
+
 #endif
