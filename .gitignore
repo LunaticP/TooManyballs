@@ -53,3 +53,7 @@ dkms.conf
 
 # Executable
 TooManyBalls
+
+# Personal Config Files
+Session.vim
+.undodir
