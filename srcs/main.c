@@ -5,7 +5,7 @@
 SDL_Window		*win;
 SDL_Renderer	*rend;
 
-static void	loop(ball **ball)
+static void	loop(ball *ball)
 {
     SDL_Event	e;
 
@@ -46,11 +46,13 @@ int			main(void)
 
 	if (init(surface))
 		exit(1);
-	b = (ball*)malloc(sizeof(ball));
- 	b[0].pos.x = WIN_WIDTH / 2;
-	b[0].pos.y = WIN_HEIGHT - 20;
-	b[0].state = 0;
+	b = (ball*)malloc(sizeof(ball) * NBALL);
+	for (int i = 0; i < NBALL; i++) {
+ 		b[i].pos.x = WIN_WIDTH / 2;
+		b[i].pos.y = WIN_HEIGHT - 20;
+		b[i].state = 0;
+	}
 	while (TRUE)
-		loop(&b);
+		loop(b);
 	return (0);
 }

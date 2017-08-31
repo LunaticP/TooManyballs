@@ -9,18 +9,22 @@ void		resetBall(ball *b)
 	b->state = 0;
 }
 
-void		balls(ball **ball)
+void		balls(ball *b)
 {
-	if (ball[0]->state == 0)
-		return;
-
-	if (ball[0]->pos.x + ball[0]->dir.x * 5.0f > (float)WIN_WIDTH * 0.75f - 5 ||
-		ball[0]->pos.x + ball[0]->dir.x * 5.0f < (float)WIN_WIDTH * 0.25f + 5)
-		ball[0]->dir.x *= -1.0f;
-	if (ball[0]->pos.y - ball[0]->dir.y * 5.0f < 25.0f)
-		ball[0]->dir.y *= -1.0f;
-	ball[0]->pos.x += ball[0]->dir.x * 5.0f;
-	ball[0]->pos.y -= ball[0]->dir.y * 5.0f;
-	if (ball[0]->pos.y > WIN_HEIGHT - 20)
-		resetBall(ball[0]);
+	for (int i = 0; i < NBALL; i++) {
+		if (i != 0 && b[i].state == 0) {
+			if (b[i - 1].pos.y < WIN_HEIGHT - 50)
+				b[i].state = 1;
+			continue;
+		}
+		if (b[i].pos.x + b[i].dir.x * 5.0f > (float)WIN_WIDTH * 0.75f - 5 ||
+			b[i].pos.x + b[i].dir.x * 5.0f < (float)WIN_WIDTH * 0.25f + 5)
+			b[i].dir.x *= -1.0f;
+		if (b[i].pos.y - b[i].dir.y * 5.0f < 25.0f)
+			b[i].dir.y *= -1.0f;
+		b[i].pos.x += b[i].dir.x * 5.0f;
+		b[i].pos.y -= b[i].dir.y * 5.0f;
+		if (b[i].pos.y > WIN_HEIGHT)
+			resetBall(&(b[i]));
+	}
 }

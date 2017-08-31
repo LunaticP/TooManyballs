@@ -27,19 +27,33 @@ static void	draw_ray(SDL_Renderer *rend,vec2 m)
 	SDL_RenderDrawLine(rend, WIN_WIDTH / 2, WIN_HEIGHT - 20, x, y);
 }
 
-static void	drawBalls(SDL_Renderer *rend, ball **ball)
+static void	drawBalls(SDL_Renderer *rend, ball *b)
 {
 	SDL_Rect	r;
 
 	r.w = 10;
 	r.h = 10;
-	r.x = ball[0]->pos.x - 5;
-	r.y = ball[0]->pos.y - 5;
-	SDL_SetRenderDrawColor(rend, 0xFF, 0xFF, 0xFF, 0xFF);
-	SDL_RenderFillRect(rend, &r);
+	for (int i = 0; i < NBALL; i++) {
+		r.x = b[i].pos.x - 5;
+		r.y = b[i].pos.y - 5;
+		SDL_SetRenderDrawColor(rend, 0xFF, 0xFF, 0xFF, 0xFF);
+		SDL_RenderFillRect(rend, &r);
+	}
 }
 
-void	draw(SDL_Renderer *rend, ball **ball)
+static void	startBalls(ball *b, vec2 m)
+{
+	for (int i = 0; i < NBALL; i++)
+		if (b[i].state == 1)
+			return;
+	b[0].state = 1;
+	for (int i = 0; i < NBALL; i++) {
+		b[i].dir.x = m.x;
+		b[i].dir.y = m.y;
+	}
+}
+
+void	draw(SDL_Renderer *rend, ball *b)
 {
 	SDL_Rect	box;
 	vec2		m;
@@ -55,13 +69,10 @@ void	draw(SDL_Renderer *rend, ball **ball)
 	m.y /= l;
 	draw_ray(rend, m);
 	draw_rect(rend);
-	if (ball[0]->state == 0 && click & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-		ball[0]->state = 1;
-		ball[0]->dir.x = m.x;
-		ball[0]->dir.y = m.y;
-	}
-	balls(ball);
-	drawBalls(rend, ball);
+	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
+		startBalls(b, m);
+	balls(b);
+	drawBalls(rend, b);
 	box.w = WIN_WIDTH / 2;
 	box.h = WIN_HEIGHT - 20;
 	box.x = WIN_WIDTH / 4;

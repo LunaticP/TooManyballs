@@ -8,8 +8,10 @@
 # define WIN_WIDTH	2560
 # define WIN_HEIGHT	1440
 
-# define TRUE	1
-# define FALSE	0
+# define	TRUE	1
+# define	FALSE	0
+
+# define	NBALL 60
 
 typedef struct	vec2
 {
@@ -24,7 +26,7 @@ typedef struct	ball
 	short		state;
 }				ball;
 
-void	draw(SDL_Renderer *rend, ball **ball);
-void	balls(ball **ball);
+void	draw(SDL_Renderer *rend, ball *ball);
+void	balls(ball *ball);
 
 #endif
