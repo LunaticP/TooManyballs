@@ -17,8 +17,8 @@ void		balls(ball *b)
 				b[i].state = 1;
 			continue;
 		}
-		if (b[i].pos.x + b[i].dir.x * 5.0f > (float)WIN_WIDTH * 0.75f - 5 ||
-			b[i].pos.x + b[i].dir.x * 5.0f < (float)WIN_WIDTH * 0.25f + 5)
+		if (b[i].pos.x + b[i].dir.x * 5.0f > (WIN_WIDTH + RECT_WIDTH) / 2 - 5 ||
+			b[i].pos.x + b[i].dir.x * 5.0f < (WIN_WIDTH - RECT_WIDTH) / 2 + 5)
 			b[i].dir.x *= -1.0f;
 		if (b[i].pos.y - b[i].dir.y * 5.0f < 25.0f)
 			b[i].dir.y *= -1.0f;
