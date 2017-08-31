@@ -4,8 +4,9 @@
 
 SDL_Window		*win;
 SDL_Renderer	*rend;
+ball			*b;
 
-static void	loop(ball *ball)
+static void	loop(global *g)
 {
     SDL_Event	e;
 
@@ -14,7 +15,7 @@ static void	loop(ball *ball)
     while (SDL_PollEvent(&e))
         if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
             exit (0);
-    draw(rend, ball);
+    draw(rend, &b, g);
     SDL_UpdateWindowSurface(win);
 }
 
@@ -42,17 +43,13 @@ static int	init(SDL_Surface *surface)
 int			main(void)
 {
 	SDL_Surface		*surface = NULL;
-	ball			*b;
+	global			g;
 
 	if (init(surface))
 		exit(1);
-	b = (ball*)malloc(sizeof(ball) * NBALL);
-	for (int i = 0; i < NBALL; i++) {
- 		b[i].pos.x = WIN_WIDTH / 2;
-		b[i].pos.y = WIN_HEIGHT - 20;
-		b[i].state = 0;
-	}
+	g.nBall	= 0;
+	g.score	= 0;
 	while (TRUE)
-		loop(b);
+		loop(&g);
 	return (0);
 }

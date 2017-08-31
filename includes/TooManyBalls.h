@@ -11,7 +11,7 @@
 # define	TRUE	1
 # define	FALSE	0
 
-# define	NBALL 60
+# define	NBALL 20
 
 typedef struct	vec2
 {
@@ -26,7 +26,13 @@ typedef struct	ball
 	short		state;
 }				ball;
 
-void	draw(SDL_Renderer *rend, ball *ball);
-void	balls(ball *ball);
+typedef struct	global
+{
+	int 		nBall;
+	int			score;
+}				global;
+
+void	draw(SDL_Renderer *rend, ball **ball, global *g);
+void	balls(ball *ball, global g);
 
 #endif
