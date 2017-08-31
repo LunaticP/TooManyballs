@@ -6,7 +6,7 @@
 #    By: gudemare <gudemare@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/09/18 01:13:53 by gudemare          #+#    #+#              #
-#    Updated: 2017/08/31 02:01:41 by aviau            ###   ########.fr        #
+#    Updated: 2017/08/31 03:04:53 by aviau            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,19 +17,16 @@ NAME			=	TooManyBalls
 #==============================================================================#
 
 CC				=	clang
-CFLAGS			=	-Wall -Wextra #-Werror
-
+CFLAGS			=	-Wall -Wextra `sdl2-config --cflags` -O2 #-L/Users/gudemare/.brew/lib -I/Users/gudemare/.brew/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
 LIBS			=	libft
 LIBFT_DIR		=	libft
 
-SDL2_HEADERS	=	/Library/Frameworks/SDL2.framework/Versions/A/Headers
-SDL2_FRAMEWORK	=	/Library/Frameworks/
-FFLAGS			=	-F $(SDL2_FRAMEWORK) -framework SDL2
+FFLAGS			=	-F . `sdl2-config --libs` -lSDL2_ttf
 
+SDL2_HEADERS	=	~/.brew/include/SDL2
 HEADERS_LIB		=	libft/includes/
 HEADERS_DIR		=	includes/
 HFLAGS			=	-I $(HEADERS_DIR) -I $(HEADERS_LIB) -I $(SDL2_HEADERS)
-
 LFLAGS			=	-lft -L$(LIBFT_DIR)
 SRCS_DIR		=	srcs/
 SRCS_LIST		=	\
@@ -90,7 +87,7 @@ $(LIBS) :
 $(OBJS_DIR)%.o : $(SRCS_DIR)%.c
 	@mkdir -p $(OBJS_DIR)
 	@printf "\e[K$(CYAN)Compiling $(BOLD)$(notdir $<)$(END_GRAPHICS)$(CYAN) ...\n\e[A$(END_GRAPHICS)"
-	@$(CC) $(CFLAGS) $(HFLAGS) $(FFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(HFLAGS) -c $< -o $@
 
 clean :
 	@rm -rf $(OBJS_DIR)
