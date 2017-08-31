@@ -74,5 +74,10 @@ int			main(void)
 	g.grid = initGrid();
 	while (TRUE)
 		loop(&g);
+	for (int i = 0; i < NCASE_H; i++) {
+		free(g.grid[i]);
+	}
+	free(g.grid);
+	free(b);
 	return (0);
 }

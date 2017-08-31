@@ -4,8 +4,8 @@ static void	draw_rect(SDL_Renderer *rend, int **grid)
 {
 	SDL_Rect	rect;
 
-	rect.w = (RECT_WIDTH - 10) / NCASE_W - 10;
-	rect.h = (RECT_HEIGHT / 2 - 10) / NCASE_H - 5;
+	rect.w = (BOX_WIDTH - 10) / NCASE_W - 10;
+	rect.h = (BOX_HEIGHT / 2 - 10) / NCASE_H - 5;
 	for (int col = 0; col < NCASE_H; col++) {
 		rect.y = (col * (rect.h + 10)) + NCASE_W;
 		for(int block = 0; block < NCASE_W; block++) {
@@ -14,22 +14,22 @@ static void	draw_rect(SDL_Renderer *rend, int **grid)
 				(Uint8)(255 - grid[col][block] * 10),
 				(Uint8)(grid[col][block] * 10),
 				(Uint8)(255 - grid[col][block] * 10), 0xFF);
-				rect.x = (block * (rect.w + 10)) + (WIN_WIDTH - RECT_WIDTH) / 2 + 10;
+				rect.x = (block * (rect.w + 10)) + (WIN_WIDTH - BOX_WIDTH) / 2 + 10;
 				SDL_RenderFillRect(rend, &rect);
 			}
 		}
 	}
 }
 
-static void	draw_ray(SDL_Renderer *rend,vec2 m)
+static void	draw_ray(SDL_Renderer *rend, vec2 m)
 {
 	int		x;
 	int		y;
 
 	SDL_SetRenderDrawColor(rend, 0x00, 0xFF, 0x00, 0xFF);
 	x = (WIN_WIDTH / 2) + m.x * 350.0f;
-	y = (WIN_HEIGHT - 20) - m.y * 350.0f;
-	SDL_RenderDrawLine(rend, WIN_WIDTH / 2, WIN_HEIGHT - 20, x, y);
+	y = BOX_HEIGHT - m.y * 350.0f;
+	SDL_RenderDrawLine(rend, WIN_WIDTH / 2, BOX_HEIGHT, x, y);
 }
 
 static void	drawBalls(SDL_Renderer *rend, ball *b, global g)
@@ -55,7 +55,7 @@ static void	startBalls(ball **b, vec2 m, global *g)
 	ft_assert(*b = (ball*)malloc(sizeof(ball) * g->nBall));
 	for (int i = 0; i < g->nBall; i++) {
  		(*b)[i].pos.x = WIN_WIDTH / 2;
-		(*b)[i].pos.y = WIN_HEIGHT - 20;
+		(*b)[i].pos.y = BOX_HEIGHT;
 		(*b)[i].dir.x = m.x;
 		(*b)[i].dir.y = m.y;
 		(*b)[i].state = 0;
@@ -83,9 +83,9 @@ void	draw(SDL_Renderer *rend, ball **b, global *g)
 		startBalls(b, m, g);
 	balls(*b, g);
 	drawBalls(rend, *b, *g);
-	box.w = RECT_WIDTH;
-	box.h = RECT_HEIGHT;
-	box.x = (WIN_WIDTH - RECT_WIDTH) / 2;
+	box.w = BOX_WIDTH;
+	box.h = BOX_HEIGHT;
+	box.x = (WIN_WIDTH - BOX_WIDTH) / 2;
 	box.y = 10;
 	SDL_SetRenderDrawColor(rend, 0x80, 0x80, 0x80, 0xFF);
 	SDL_RenderDrawRect(rend, &box);
