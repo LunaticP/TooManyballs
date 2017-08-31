@@ -81,7 +81,7 @@ void	draw(SDL_Renderer *rend, ball **b, global *g)
 	draw_ray(rend, m);
 	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
 		startBalls(b, m, g);
-	balls(*b, *g);
+	balls(*b, g);
 	drawBalls(rend, *b, *g);
 	box.w = RECT_WIDTH;
 	box.h = RECT_HEIGHT;

@@ -1,6 +1,6 @@
 #include "TooManyBalls.h"
 
-#define SPEED 50.0f
+#define SPEED 4.0f
 
 void		resetBall(ball *b)
 {
@@ -24,9 +24,16 @@ float		distBall(ball b)
 	return (sqrt(xd * xd + yd * yd));
 }
 
-void		balls(ball *b, global g)
+void		checkTile(ball b, global *g)
 {
-	for (int i = 0; i < g.nBall; i++) {
+	g->grid[g->nBall]
+		[(int)b.pos.x % NCASE_W] = 0;
+//		[(int)((b.pos.x - (WIN_WIDTH + RECT_WIDTH) / 2) / (RECT_WIDTH - 10) / NCASE_W - 10)] = 0;
+}
+
+void		balls(ball *b, global *g)
+{
+	for (int i = 0; i < g->nBall; i++) {
 		if (i != 0 && b[i].state == 0) {
 			if (distBall(b[i - 1]) > 50)
 				b[i].state = 1;
@@ -39,6 +46,7 @@ void		balls(ball *b, global g)
 			b[i].dir.y *= -1.0f;
 		b[i].pos.x += b[i].dir.x * SPEED;
 		b[i].pos.y -= b[i].dir.y * SPEED;
+		checkTile(b[i], g);
 		if (b[i].pos.y > WIN_HEIGHT - 20)
 			resetBall(&(b[i]));
 	}

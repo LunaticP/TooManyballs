@@ -37,6 +37,6 @@ typedef struct	global
 }				global;
 
 void	draw(SDL_Renderer *rend, ball **ball, global *g);
-void	balls(ball *ball, global g);
+void	balls(ball *ball, global *g);
 
 #endif
