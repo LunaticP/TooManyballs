@@ -1,6 +1,6 @@
 #include "TooManyBalls.h"
 
-#define SPEED 5.0f
+#define SPEED 50.0f
 
 void		resetBall(ball *b)
 {
@@ -32,8 +32,8 @@ void		balls(ball *b, global g)
 				b[i].state = 1;
 			continue;
 		}
-		if (b[i].pos.x + b[i].dir.x * SPEED > (float)WIN_WIDTH * 0.75f - 5 ||
-			b[i].pos.x + b[i].dir.x * SPEED < (float)WIN_WIDTH * 0.25f + 5)
+		if (b[i].pos.x + b[i].dir.x * SPEED > (WIN_WIDTH + RECT_WIDTH) / 2 - 5 ||
+			b[i].pos.x + b[i].dir.x * SPEED < (WIN_WIDTH - RECT_WIDTH) / 2 + 5)
 			b[i].dir.x *= -1.0f;
 		if (b[i].pos.y - b[i].dir.y * SPEED < 25.0f)
 			b[i].dir.y *= -1.0f;

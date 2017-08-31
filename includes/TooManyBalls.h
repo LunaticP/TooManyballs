@@ -5,13 +5,16 @@
 # include <SDL_ttf.h>
 # include "libft.h"
 
-# define WIN_WIDTH	2560
-# define WIN_HEIGHT	1440
+# define WIN_WIDTH		2560
+# define WIN_HEIGHT		1440
+# define RECT_WIDTH		800
+# define RECT_HEIGHT	(WIN_HEIGHT-20)
 
 # define	TRUE	1
 # define	FALSE	0
 
-# define	NBALL 20
+# define	NCASE_W 20
+# define	NCASE_H 25
 
 typedef struct	vec2
 {
@@ -30,6 +33,7 @@ typedef struct	global
 {
 	int 		nBall;
 	int			score;
+	int			**grid;
 }				global;
 
 void	draw(SDL_Renderer *rend, ball **ball, global *g);

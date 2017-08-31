@@ -1,17 +1,22 @@
 #include "TooManyBalls.h"
 
-static void	draw_rect(SDL_Renderer *rend)
+static void	draw_rect(SDL_Renderer *rend, int **grid)
 {
 	SDL_Rect	rect;
 
-	rect.w = ((WIN_WIDTH / 2) - 10) / 20 - 10;
-	rect.h = ((WIN_HEIGHT - 20) / 2 - 10) / 25 - 5;
-	for (int col = 0; col < 25; col++) {
-		rect.y = (col * (rect.h + 10)) + 20;
-		for(int block = 0; block < 20; block++) {
-		SDL_SetRenderDrawColor(rend, 255 - col * 10, col * 10, 255 - col * 10, 0xFF);
-		rect.x = (block * (rect.w + 10)) + WIN_WIDTH / 4 + 10;
-		SDL_RenderFillRect(rend, &rect);
+	rect.w = (RECT_WIDTH - 10) / NCASE_W - 10;
+	rect.h = (RECT_HEIGHT / 2 - 10) / NCASE_H - 5;
+	for (int col = 0; col < NCASE_H; col++) {
+		rect.y = (col * (rect.h + 10)) + NCASE_W;
+		for(int block = 0; block < NCASE_W; block++) {
+			if (grid[col][block]) {
+				SDL_SetRenderDrawColor(rend,
+				(Uint8)(255 - grid[col][block] * 10),
+				(Uint8)(grid[col][block] * 10),
+				(Uint8)(255 - grid[col][block] * 10), 0xFF);
+				rect.x = (block * (rect.w + 10)) + (WIN_WIDTH - RECT_WIDTH) / 2 + 10;
+				SDL_RenderFillRect(rend, &rect);
+			}
 		}
 	}
 }
@@ -72,15 +77,15 @@ void	draw(SDL_Renderer *rend, ball **b, global *g)
 	l = sqrt((m.x * m.x) + (m.y * m.y));
 	m.x /= l;
 	m.y /= l;
+	draw_rect(rend, g->grid);
 	draw_ray(rend, m);
-	draw_rect(rend);
 	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
 		startBalls(b, m, g);
 	balls(*b, *g);
 	drawBalls(rend, *b, *g);
-	box.w = WIN_WIDTH / 2;
-	box.h = WIN_HEIGHT - 20;
-	box.x = WIN_WIDTH / 4;
+	box.w = RECT_WIDTH;
+	box.h = RECT_HEIGHT;
+	box.x = (WIN_WIDTH - RECT_WIDTH) / 2;
 	box.y = 10;
 	SDL_SetRenderDrawColor(rend, 0x80, 0x80, 0x80, 0xFF);
 	SDL_RenderDrawRect(rend, &box);
