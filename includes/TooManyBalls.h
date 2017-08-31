@@ -2,6 +2,8 @@
 # define TOO_MANY_BALLS
 
 # include <SDL.h>
+# include <SDL_ttf.h>
+# include "libft.h"
 
 # define WIN_WIDTH	2560
 # define WIN_HEIGHT	1440
