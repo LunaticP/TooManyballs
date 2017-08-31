@@ -5,10 +5,10 @@
 # include <SDL_ttf.h>
 # include "libft.h"
 
-# define WIN_WIDTH		2560
-# define WIN_HEIGHT		1440
-# define RECT_WIDTH		800
-# define RECT_HEIGHT	(WIN_HEIGHT-20)
+# define WIN_WIDTH	2560
+# define WIN_HEIGHT	1440
+# define BOX_WIDTH	(WIN_WIDTH / 2)
+# define BOX_HEIGHT	(WIN_HEIGHT - 20)
 
 # define	TRUE	1
 # define	FALSE	0
