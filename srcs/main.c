@@ -1,19 +1,20 @@
 #include "TooManyBalls.h"
 #include <math.h>
+#include <stdlib.h>
 
 SDL_Window		*win;
 SDL_Renderer	*rend;
 
-static void	loop(void)
+static void	loop(ball **ball)
 {
-    SDL_Event e;
+    SDL_Event	e;
 
 	SDL_SetRenderDrawColor(rend, 0x20, 0x20, 0x20, 0xFF);
 	SDL_RenderClear(rend);
     while (SDL_PollEvent(&e))
         if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
             exit (0);
-    draw(rend);
+    draw(rend, ball);
     SDL_UpdateWindowSurface(win);
 }
 
@@ -41,10 +42,15 @@ static int	init(SDL_Surface *surface)
 int			main(void)
 {
 	SDL_Surface		*surface = NULL;
+	ball			*b;
 
 	if (init(surface))
 		exit(1);
+	b = (ball*)malloc(sizeof(ball));
+ 	b[0].pos.x = WIN_WIDTH / 2;
+	b[0].pos.y = WIN_HEIGHT - 20;
+	b[0].state = 0;
 	while (TRUE)
-		loop();
+		loop(&b);
 	return (0);
 }

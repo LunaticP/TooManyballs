@@ -9,6 +9,20 @@
 # define TRUE	1
 # define FALSE	0
 
-void	draw(SDL_Renderer *rend);
+typedef struct	vec2
+{
+	float		x;
+	float		y;
+}				vec2;
+
+typedef struct	ball
+{
+	vec2		pos;
+	vec2		dir;
+	short		state;
+}				ball;
+
+void	draw(SDL_Renderer *rend, ball **ball);
+void	balls(ball **ball);
 
 #endif
