@@ -4,12 +4,12 @@ static void	draw_rect(SDL_Renderer *rend, int **grid)
 {
 	SDL_Rect	rect;
 
-	rect.w = (BOX_WIDTH - 10) / NCASE_W - 10;
-	rect.h = (BOX_HEIGHT / 2 - 10) / NCASE_H - 5;
-	for (int col = 0; col < NCASE_H; col++) {
+	rect.w = CASE_WIDTH;
+	rect.h = CASE_HEIGHT;
+		for (int col = 0; col < NCASE_H; col++) {
 		rect.y = (col * (rect.h + 10)) + NCASE_W;
 		for(int block = 0; block < NCASE_W; block++) {
-			if (grid[col][block]) {
+			if (grid[col][block] > 0) {
 				SDL_SetRenderDrawColor(rend,
 				(Uint8)(255 - grid[col][block] * 10),
 				(Uint8)(grid[col][block] * 10),

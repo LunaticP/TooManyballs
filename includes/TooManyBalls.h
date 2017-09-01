@@ -5,16 +5,20 @@
 # include <SDL_ttf.h>
 # include "libft.h"
 
-# define WIN_WIDTH	2560
-# define WIN_HEIGHT	1440
-# define BOX_WIDTH	(WIN_WIDTH / 2)
-# define BOX_HEIGHT	(WIN_HEIGHT - 20)
+# define WIN_WIDTH		2560
+# define WIN_HEIGHT		1440
+# define BOX_WIDTH		(WIN_WIDTH / 2)
+# define BOX_HEIGHT		(WIN_HEIGHT - 20)
+# define NCASE_W		20
+# define NCASE_H		25
+# define CASE_WIDTH		(BOX_WIDTH - 10) / NCASE_W - 10;
+# define CASE_HEIGHT	(BOX_HEIGHT / 2 - 10) / NCASE_H - 5;
 
-# define	TRUE	1
-# define	FALSE	0
+# define SPEED			8.0f
 
-# define	NCASE_W 20
-# define	NCASE_H 25
+# define TRUE			1
+# define FALSE			0
+
 
 typedef struct	vec2
 {

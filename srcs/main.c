@@ -55,7 +55,7 @@ static int	**initGrid()
 	for (i = 0; i < NCASE_H; i++) {
 		ft_assert(grid[i] = (int *)malloc(sizeof(int *) * NCASE_W));
 		for (j = 0; j < NCASE_W; j++) {
-			grid[i][j] = i + 1;
+			grid[i][j] = random() % (NCASE_H - i) + 15;
 		}
 	}
 	grid[i] = NULL;
