@@ -6,7 +6,7 @@
 #    By: gudemare <gudemare@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/09/18 01:13:53 by gudemare          #+#    #+#              #
-#    Updated: 2017/09/02 10:08:28 by gudemare         ###   ########.fr        #
+#    Updated: 2017/09/02 15:08:15 by aviau            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ CFLAGS			=	-Wall -Wextra `sdl2-config --cflags` -O2 #-L/Users/gudemare/.brew/lib
 LIBS			=	libft
 LIBFT_DIR		=	libft
 
-FFLAGS			=	-F . `sdl2-config --libs` -lSDL2_ttf
+FFLAGS			=	-F . `sdl2-config --libs` -lSDL2_ttf -lSDL2_image
 
 SDL2_HEADERS	=	~/.brew/include/SDL2
 HEADERS_LIB		=	libft/includes/

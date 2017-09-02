@@ -3,6 +3,7 @@
 
 # include <SDL.h>
 # include <SDL_ttf.h>
+# include <SDL_image.h>
 # include <time.h>
 # include "libft.h"
 
@@ -16,7 +17,7 @@
 # define CASE_HEIGHT	(BOX_HEIGHT / NCASE_H)
 # define MARGIN			((WIN_WIDTH - BOX_WIDTH) / 2)
 
-# define SPEED			5.0f
+# define SPEED			2.0f
 
 
 # define TRUE			1

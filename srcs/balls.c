@@ -17,7 +17,6 @@ float			distBall(ball b)
 	return (sqrt(xd * xd + yd * yd));
 }
 
-/*
 static void	drawCircle(vec2 p, float rad, global *g)
 {
 	vec2	dir;
@@ -34,11 +33,10 @@ static void	drawCircle(vec2 p, float rad, global *g)
 		SDL_RenderDrawPoint(g->rend, p.x + (dir.x * rad), p.y + (dir.y * rad));
 	}
 }
-*/
 
-inline float	dot(vec2 dirA, vec2 dirB)
+static float	dot(vec2 dirA, vec2 dirB)
 {
-	return(dirA.x * dirB.x + dirA.y * dirB.y);
+	return((dirA.x * dirB.x) + (dirA.y * dirB.y));
 }
 
 static int		lrud(vec2 dir)
@@ -73,7 +71,7 @@ static void	checkTile(ball *b, global *g)
 			{
 				block.x = (j * CASE_WIDTH) + (CASE_WIDTH / 2.0f);
 				block.y = (i * CASE_HEIGHT) + (CASE_HEIGHT / 2.0f);
-				//drawCircle(b->pos, 20.0f, g);
+				drawCircle(b->pos, 10.0f, g);
 				diff.x = b->pos.x - MARGIN - block.x;
 				diff.y = b->pos.y - 10 - block.y;
 				nearest.x = ft_max(-(CASE_WIDTH / 2.0f), ft_min(CASE_WIDTH / 2.0f, diff.x));
@@ -82,22 +80,25 @@ static void	checkTile(ball *b, global *g)
 				diff.y = block.y + nearest.y;
 				float x = fabs(b->pos.x - MARGIN - diff.x);
 				float y = fabs(b->pos.y - 10 - diff.y);
-				if (sqrt((x * x) + (y * y)) <= 20.0f) {
+				if (sqrt((x * x) + (y * y)) <= 10.0f) {
 					g->grid[i][j]--;
 					float	penetration;
 					int		dir = lrud(b->dir);
-					if (dir == 0 || dir == 1) {
-						penetration = 20.0f - fabs(diff.x);
+					ft_putstr(ft_itoa(dir));
+					if (dir == 1 || dir == 3) {
+						ft_putendl("LR");
+						penetration = 10.0f - fabs(diff.x);
 						b->pos.x = -(b->pos.x);
-						if (dir == 0)
+						if (dir == 3)
 							b->pos.x += penetration;
 						else
 							b->pos.x -= penetration;
 					}
-					if (dir == 2 || dir == 3) {
-						penetration = 20.0f - fabs(diff.y);
+					else {
+						ft_putendl("UD");
+						penetration = 10.0f - fabs(diff.y);
 						b->pos.y = -(b->pos.y);
-						if (dir == 2)
+						if (dir == 0)
 							b->pos.y -= penetration;
 						else
 							b->pos.y += penetration;

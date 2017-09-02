@@ -19,25 +19,42 @@ static void	draw_score(global *g, SDL_Rect rect, int score)
 static void	draw_rect(global *g)
 {
 	SDL_Rect	rect;
+	SDL_Surface *image[3];
+	SDL_Texture *tex[3];
 
+	image[0] = IMG_Load("textures/sample.png");
+	if(!image[0]) {
+		printf("IMG_Load: %s\n", IMG_GetError());
+		exit(1);
+	}
+	tex[0] = SDL_CreateTextureFromSurface(g->rend, image[0]);
+	image[1] = IMG_Load("textures/brick2_b.jpg");
+	if(!image[1]) {
+		printf("IMG_Load: %s\n", IMG_GetError());
+		exit(1);
+	}
+	tex[1] = SDL_CreateTextureFromSurface(g->rend, image[1]);
+	image[2] = IMG_Load("textures/you-dont-say-meme-th.jpg");
+	if(!image[2]) {
+		printf("IMG_Load: %s\n", IMG_GetError());
+		exit(1);
+	}
+	tex[2] = SDL_CreateTextureFromSurface(g->rend, image[2]);
 	rect.w = CASE_WIDTH;
 	rect.h = CASE_HEIGHT;
 	for (int col = 0; col < NCASE_H; col++) {
 		rect.y = (col * CASE_HEIGHT) + 10;
 		for(int block = 0; block < NCASE_W; block++) {
 			if (g->grid[col][block] > 0) {
-				SDL_SetRenderDrawColor(g->rend,
-					(Uint8)(255 - g->grid[col][block] * 3.4f),
-					(Uint8)(g->grid[col][block] * 3.4f),
-					(Uint8)(255 - g->grid[col][block] * 3.4f), 0xFF);
 				rect.x = (block * CASE_WIDTH) + (WIN_WIDTH - BOX_WIDTH) / 2;
-				SDL_RenderFillRect(g->rend, &rect);
-				//SDL_SetRenderDrawColor(g->rend, 0, 0, 0, 0xFF);
-				//SDL_RenderDrawRect(g->rend, &rect);
+				SDL_RenderCopy(g->rend, tex[rect.y % 3], NULL, &rect);
 				//draw_score(g, rect, g->grid[col][block]);
 			}
 		}
 	}
+	SDL_FreeSurface(image[0]);
+	SDL_FreeSurface(image[1]);
+	SDL_FreeSurface(image[2]);
 }
 
 static void	draw_ray(SDL_Renderer *rend, vec2 m)
@@ -75,7 +92,7 @@ static void	startBalls(vec2 m, global *g)
 	}
 	ft_assert(g->b = (ball*)malloc(sizeof(ball) * (g->nBall + 1)));
 	for (unsigned int i = 0; i < g->nBall; i++) {
- 		(g->b)[i].pos.x = WIN_WIDTH / 2;
+		(g->b)[i].pos.x = WIN_WIDTH / 2;
 		(g->b)[i].pos.y = BOX_HEIGHT;
 		(g->b)[i].dir.x = m.x;
 		(g->b)[i].dir.y = m.y;
