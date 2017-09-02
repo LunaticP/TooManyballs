@@ -23,11 +23,11 @@ void		checkTile(ball b, global *g)
 	int		ball_line;
 	int		*ball_case;
 
-	ball_col = (int)b.pos.y % CASE_HEIGHT;
-	ball_line = (int)b.pos.x % CASE_WIDTH;
+	ball_col = (int)b.pos.y % NCASE_H;
+	ball_line = (int)b.pos.x % NCASE_W;
 	if ((ball_col >= 0 && ball_col < NCASE_H) &&
 			(ball_line >= 0 && ball_line < NCASE_W) &&
-			((ball_case = &(g->grid[ball_col][ball_line])) != 0))
+			(*(ball_case = &(g->grid[ball_col][ball_line])) != 0))
 		(*ball_case)--;
 //		[(int)((b.pos.x - (WIN_WIDTH + RECT_WIDTH) / 2) / (RECT_WIDTH - 10) / NCASE_W - 10)] = 0;
 }
