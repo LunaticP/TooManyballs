@@ -65,26 +65,28 @@ static void	drawBalls(SDL_Renderer *rend, ball *b, global g)
 	}
 }
 
-static void	startBalls(ball **b, vec2 m, global *g)
+static void	startBalls(vec2 m, global *g)
 {
 	for (unsigned int i = 0; i <= g->nBall; i++) {
-		if ((*b)[i].state == 2)
-			break;
-		else if ((*b)[i].state == 1)
-			return;
+		if ((g->b)[i].state != 0) {
+			if ((g->b)[i].state == 1)
+				return;
+			else
+				break;
+		}
 	}
-	ft_assert(*b = (ball*)malloc(sizeof(ball) * (g->nBall + 1)));
+	ft_assert(g->b = (ball*)malloc(sizeof(ball) * (g->nBall + 1)));
 	for (unsigned int i = 0; i < g->nBall; i++) {
- 		(*b)[i].pos.x = WIN_WIDTH / 2;
-		(*b)[i].pos.y = BOX_HEIGHT;
-		(*b)[i].dir.x = m.x;
-		(*b)[i].dir.y = m.y;
-		(*b)[i].state = 0;
+ 		(g->b)[i].pos.x = WIN_WIDTH / 2;
+		(g->b)[i].pos.y = BOX_HEIGHT;
+		(g->b)[i].dir.x = m.x;
+		(g->b)[i].dir.y = m.y;
+		(g->b)[i].state = 0;
 	}
-	(*b)[g->nBall].state = 2;
+	(g->b)[0].state = 1;
+	(g->b)[g->nBall].state = 2;
 	g->inTurn = 1;
 	g->nLaunchedBalls = 1;
-	//(*b)[0].state = 1;
 }
 
 void	draw(global *g)
@@ -104,7 +106,7 @@ void	draw(global *g)
 	draw_rect(g);
 	draw_ray(g->rend, m);
 	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
-		startBalls(&(g->b), m, g);
+		startBalls(m, g);
 	if (g->nLaunchedBalls > 0) {
 		balls(g->b, g);
 		drawBalls(g->rend, g->b, *g);
