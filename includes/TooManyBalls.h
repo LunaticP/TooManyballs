@@ -36,12 +36,17 @@ typedef struct	ball
 
 typedef struct	global
 {
-	int 		nBall;
-	int			score;
-	int			**grid;
-}				global;
+	SDL_Surface		*surface;
+	SDL_Window		*win;
+	SDL_Renderer	*rend;
+	TTF_Font		*font;
+	ball			*b;
+	int 			nBall;
+	int				score;
+	int				**grid;
+}					global;
 
-void			draw(SDL_Renderer *rend, ball **ball, global *g);
+void			draw(global *g);
 void			balls(ball *ball, global *g);
 
 #endif

@@ -66,7 +66,7 @@ static void	startBalls(ball **b, vec2 m, global *g)
 	(*b)[0].state = 1;
 }
 
-void	draw(SDL_Renderer *rend, ball **b, global *g)
+void	draw(global *g)
 {
 	SDL_Rect	box;
 	vec2		m;
@@ -80,16 +80,16 @@ void	draw(SDL_Renderer *rend, ball **b, global *g)
 	l = sqrt((m.x * m.x) + (m.y * m.y));
 	m.x /= l;
 	m.y /= l;
-	draw_rect(rend, g->grid);
-	draw_ray(rend, m);
+	draw_rect(g->rend, g->grid);
+	draw_ray(g->rend, m);
 	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
-		startBalls(b, m, g);
-	balls(*b, g);
-	drawBalls(rend, *b, *g);
+		startBalls(&(g->b), m, g);
+	balls(g->b, g);
+	drawBalls(g->rend, g->b, *g);
 	box.w = BOX_WIDTH;
 	box.h = BOX_HEIGHT;
 	box.x = (WIN_WIDTH - BOX_WIDTH) / 2;
 	box.y = 10;
-	SDL_SetRenderDrawColor(rend, 0x80, 0x80, 0x80, 0xFF);
-	SDL_RenderDrawRect(rend, &box);
+	SDL_SetRenderDrawColor(g->rend, 0x80, 0x80, 0x80, 0xFF);
+	SDL_RenderDrawRect(g->rend, &box);
 }
