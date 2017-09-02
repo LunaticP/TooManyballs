@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-static void	loop(global *g)
+static void			loop(global *g)
 {
 	SDL_Event	e;
 	SDL_Rect	pos;
@@ -25,6 +25,24 @@ static void	loop(global *g)
 		pos.x = 0;
 		pos.y = 0;
 		level = ft_strdup("Level ");
+		score = ft_itoa(g->turn);
+		level = ft_strextjoin(level, score);
+		text = TTF_RenderText_Solid(g->score_font, level, couleur);
+		SDL_BlitSurface(text, NULL, g->surface, &pos);
+		pos.y = text->h + 5;
+		SDL_FreeSurface(text);
+		ft_strdel(&level);
+		ft_strdel(&score);
+		level = ft_strdup("Balls ");
+		score = ft_itoa(g->nBall);
+		level = ft_strextjoin(level, score);
+		text = TTF_RenderText_Solid(g->score_font, level, couleur);
+		SDL_BlitSurface(text, NULL, g->surface, &pos);
+		pos.y += text->h + 5;
+		SDL_FreeSurface(text);
+		ft_strdel(&level);
+		ft_strdel(&score);
+		level = ft_strdup("Active Balls ");
 		score = ft_itoa(g->nLaunchedBalls);
 		level = ft_strextjoin(level, score);
 		text = TTF_RenderText_Solid(g->score_font, level, couleur);
@@ -43,21 +61,21 @@ static void	loop(global *g)
 	}
 }
 
-static int	**initGrid()
+static unsigned int	**initGrid()
 {
-	int		i;
-	int		j;
-	int		**grid;
+	int				i;
+	int				j;
+	unsigned int	**grid;
 
-	ft_assert(grid = (int **)malloc(sizeof(int **) * (NCASE_H + 1)));
+	ft_assert(grid = (unsigned int **)malloc(sizeof(unsigned int **) * (NCASE_H + 1)));
 	for (i = 0; i < NCASE_H - 5; i++) {
-		ft_assert(grid[i] = (int *)malloc(sizeof(int *) * NCASE_W));
+		ft_assert(grid[i] = (unsigned int *)malloc(sizeof(unsigned int *) * NCASE_W));
 		for (j = 0; j < NCASE_W; j++) {
-			grid[i][j] = random() % (NCASE_H - i) + 15;
+			grid[i][j] = random() % (NCASE_H - i) + 150;
 		}
 	}
 	for (i = NCASE_H - 5; i < NCASE_H; i++) {
-		ft_assert(grid[i] = (int *)malloc(sizeof(int *) * NCASE_W));
+		ft_assert(grid[i] = (unsigned int *)malloc(sizeof(unsigned int *) * NCASE_W));
 		for (j = 0; j < NCASE_W; j++) {
 			grid[i][j] = 0;
 		}
@@ -66,7 +84,7 @@ static int	**initGrid()
 	return (grid);
 }
 
-static int	init(global *g)
+static int			init(global *g)
 {
 	SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -103,13 +121,17 @@ static int	init(global *g)
 				"TTF_OpenFont fail : %s\n",TTF_GetError());
 		return (1);
 	}
-	g->nBall	= 0;
-	g->score	= 0;
+	g->nBall = 1;
+	ft_assert(g->b = (ball*)malloc(sizeof(ball) * g->nBall));
+	g->nLaunchedBalls = 0;
+	g->score = 0;
+	g->turn = 1;
+	g->inTurn = 0;
 	g->grid = initGrid();
 	return (0);
 }
 
-int			main(void)
+int					main(void)
 {
 	global			g;
 

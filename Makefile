@@ -6,7 +6,7 @@
 #    By: gudemare <gudemare@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/09/18 01:13:53 by gudemare          #+#    #+#              #
-#    Updated: 2017/09/02 05:13:40 by aviau            ###   ########.fr        #
+#    Updated: 2017/09/02 10:08:28 by gudemare         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,9 +30,10 @@ HFLAGS			=	-I $(HEADERS_DIR) -I $(HEADERS_LIB) -I $(SDL2_HEADERS)
 LFLAGS			=	-lft -L$(LIBFT_DIR) -lm
 SRCS_DIR		=	srcs/
 SRCS_LIST		=	\
-					main.c\
 					balls.c\
-					draw.c
+					draw.c\
+					main.c\
+					mechanics.c
 SRCS			=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 
 OBJS_DIR		=	./objs/

@@ -10,8 +10,8 @@
 # define WIN_HEIGHT		1440
 # define BOX_WIDTH		(WIN_WIDTH / 2)
 # define BOX_HEIGHT		(WIN_HEIGHT - 20)
-# define NCASE_W		10
-# define NCASE_H		10
+# define NCASE_W		20
+# define NCASE_H		40
 # define CASE_WIDTH		(BOX_WIDTH  / NCASE_W)
 # define CASE_HEIGHT	(BOX_HEIGHT / NCASE_H)
 # define MARGIN			((WIN_WIDTH - BOX_WIDTH) / 2)
@@ -44,13 +44,15 @@ typedef struct	global
 	TTF_Font		*score_font;
 	TTF_Font		*case_font;
 	ball			*b;
-	int 			nBall;
-	int				nLaunchedBalls;
-	int				turn;
-	int				score;
-	int				**grid;
+	unsigned int	**grid;
+	unsigned int 	nBall;
+	unsigned int	nLaunchedBalls;
+	unsigned int	turn;
+	unsigned int	inTurn;
+	unsigned int	score;
 }					global;
 
+void			nextTurn(global *g);
 void			draw(global *g);
 void			balls(ball *ball, global *g);
 
