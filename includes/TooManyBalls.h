@@ -3,6 +3,7 @@
 
 # include <SDL.h>
 # include <SDL_ttf.h>
+# include <time.h>
 # include "libft.h"
 
 # define WIN_WIDTH		2560
@@ -37,12 +38,18 @@ typedef struct	ball
 
 typedef struct	global
 {
-	int 		nBall;
-	int			score;
-	int			**grid;
-}				global;
+	SDL_Surface		*surface;
+	SDL_Window		*win;
+	SDL_Renderer	*rend;
+	TTF_Font		*score_font;
+	TTF_Font		*case_font;
+	ball			*b;
+	int 			nBall;
+	int				score;
+	int				**grid;
+}					global;
 
-void			draw(SDL_Renderer *rend, ball **ball, global *g);
-void			balls(ball *ball, global *g, SDL_Renderer *rend);
+void			draw(global *g);
+void			balls(ball *ball, global *g);
 
 #endif

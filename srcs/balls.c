@@ -23,7 +23,21 @@ float		clamp(float val, float low, float high)
 	return(ft_max(low, ft_min(high, val)));
 }
 
-static int	checkTile(ball *b, global *g, SDL_Renderer *rend)
+static void	drawCircle(vec2 p, float rad, global *g)
+{
+	vec2	dir;
+
+	dir.x = 1.0;
+	dir.y = 0.0;
+	SDL_SetRenderDrawColor(g->rend, 0x00, 0xFF, 0x00, 0xFF);
+	for(int a = 0; a < 360; a++) {
+		dir.x = dir.x * cos(a * M_PI / 180.0f) - dir.y * sin(a * M_PI / 180.0f);
+		dir.y = dir.x * sin(a * M_PI / 180.0f) + dir.y * cos(a * M_PI / 180.0f);
+		SDL_RenderDrawPoint(g->rend, p.x + (dir.x * rad), p.y + (dir.y * rad));
+	}
+}
+
+static int	checkTile(ball *b, global *g)
 {
 	vec2	block;
 	vec2	diff;
@@ -48,10 +62,11 @@ static int	checkTile(ball *b, global *g, SDL_Renderer *rend)
 				float x = b->pos.x - MARGIN - block.x;
 				float y = b->pos.y - 10 - block.y;
 				if (sqrt((x * x) + (y * y)) <= 100.0f)
-					SDL_SetRenderDrawColor(rend, 0x00, 0xFF, 0x00, 0xFF);
+					SDL_SetRenderDrawColor(g->rend, 0x00, 0xFF, 0x00, 0xFF);
 				else
-					SDL_SetRenderDrawColor(rend, 0xFF, 0xFF, 0xFF, 0xFF);
-				SDL_RenderDrawRect(rend, &r);
+					SDL_SetRenderDrawColor(g->rend, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_RenderDrawRect(g->rend, &r);
+				drawCircle(b->pos, 100.0f, g);
 				diff.x = b->pos.x + MARGIN - block.x;
 				diff.y = b->pos.y + 10 - block.y;
 				nearest.x = clamp(diff.x, -(CASE_WIDTH / 2), CASE_WIDTH / 2);
@@ -75,7 +90,7 @@ static int	checkTile(ball *b, global *g, SDL_Renderer *rend)
 \*		(*ball_case)--;*/
 }
 
-void		balls(ball *b, global *g, SDL_Renderer *rend)
+void		balls(ball *b, global *g)
 {
 	for (int i = 0; i < g->nBall; i++) {
 		if (i != 0 && b[i].state == 0) {
@@ -90,7 +105,7 @@ void		balls(ball *b, global *g, SDL_Renderer *rend)
 			b[i].dir.y *= -1.0f;
 		b[i].pos.x += b[i].dir.x * SPEED;
 		b[i].pos.y -= b[i].dir.y * SPEED;
-		if (b[i].pos.y > BOX_HEIGHT || checkTile(&(b[i]), g, rend))
+		if (b[i].pos.y > BOX_HEIGHT || checkTile(&(b[i]), g))
 			resetBall(&(b[i]));
 	}
 }

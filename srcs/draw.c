@@ -1,6 +1,22 @@
 #include "TooManyBalls.h"
 
-static void	draw_rect(SDL_Renderer *rend, int **grid)
+static void	draw_score(global *g, SDL_Rect rect, int score)
+{
+	SDL_Color	couleur = {0x00,0x00,0xFF,0xFF};
+	SDL_Surface	*text;
+	SDL_Rect	dst;
+	char				*force;
+
+	force = ft_itoa(score);
+	text = TTF_RenderText_Blended(g->case_font, force, couleur);
+	dst.x = rect.x + CASE_WIDTH / 2 - text->w / 2;
+	dst.y = rect.y + CASE_HEIGHT / 2 - text->h / 2;
+	SDL_BlitSurface(text, NULL, g->surface, &dst);
+	SDL_FreeSurface(text);
+	ft_strdel(&force);
+}
+
+static void	draw_rect(global *g)
 {
 	SDL_Rect	rect;
 
@@ -9,15 +25,16 @@ static void	draw_rect(SDL_Renderer *rend, int **grid)
 	for (int col = 0; col < NCASE_H; col++) {
 		rect.y = (col * CASE_HEIGHT) + 10;
 		for(int block = 0; block < NCASE_W; block++) {
-			if (grid[col][block] > 0) {
-				SDL_SetRenderDrawColor(rend,
-					(Uint8)(255 - grid[col][block] * 3.4f),
-					(Uint8)(grid[col][block] * 3.4f),
-					(Uint8)(255 - grid[col][block] * 3.4f), 0xFF);
+			if (g->grid[col][block] > 0) {
+				SDL_SetRenderDrawColor(g->rend,
+					(Uint8)(255 - g->grid[col][block] * 3.4f),
+					(Uint8)(g->grid[col][block] * 3.4f),
+					(Uint8)(255 - g->grid[col][block] * 3.4f), 0xFF);
 				rect.x = (block * CASE_WIDTH) + (WIN_WIDTH - BOX_WIDTH) / 2;
-				SDL_RenderFillRect(rend, &rect);
-			//	SDL_SetRenderDrawColor(rend, 0, 0, 0, 0xFF);
-			//	SDL_RenderDrawRect(rend, &rect);
+				SDL_RenderFillRect(g->rend, &rect);
+				//SDL_SetRenderDrawColor(g->rend, 0, 0, 0, 0xFF);
+				//SDL_RenderDrawRect(g->rend, &rect);
+				draw_score(g, rect, g->grid[col][block]);
 			}
 		}
 	}
@@ -53,8 +70,7 @@ static void	startBalls(ball **b, vec2 m, global *g)
 	for (int i = 0; i < g->nBall; i++)
 		if ((*b)[i].state == 1)
 			return;
-	g->nBall *= 2;
-	g->nBall ++;
+	g->nBall = 1;
 	ft_assert(*b = (ball*)malloc(sizeof(ball) * g->nBall));
 	for (int i = 0; i < g->nBall; i++) {
  		(*b)[i].pos.x = WIN_WIDTH / 2;
@@ -66,7 +82,7 @@ static void	startBalls(ball **b, vec2 m, global *g)
 	(*b)[0].state = 1;
 }
 
-void	draw(SDL_Renderer *rend, ball **b, global *g)
+void	draw(global *g)
 {
 	SDL_Rect	box;
 	vec2		m;
@@ -80,16 +96,16 @@ void	draw(SDL_Renderer *rend, ball **b, global *g)
 	l = sqrt((m.x * m.x) + (m.y * m.y));
 	m.x /= l;
 	m.y /= l;
-	draw_rect(rend, g->grid);
-	draw_ray(rend, m);
+	draw_rect(g);
+	draw_ray(g->rend, m);
 	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
-		startBalls(b, m, g);
-	balls(*b, g, rend);
-	drawBalls(rend, *b, *g);
+		startBalls(&(g->b), m, g);
+	balls(g->b, g);
+	drawBalls(g->rend, g->b, *g);
 	box.w = BOX_WIDTH;
 	box.h = BOX_HEIGHT;
 	box.x = (WIN_WIDTH - BOX_WIDTH) / 2;
 	box.y = 10;
-	SDL_SetRenderDrawColor(rend, 0x80, 0x80, 0x80, 0xFF);
-	SDL_RenderDrawRect(rend, &box);
+	SDL_SetRenderDrawColor(g->rend, 0x80, 0x80, 0x80, 0xFF);
+	SDL_RenderDrawRect(g->rend, &box);
 }

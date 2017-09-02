@@ -2,47 +2,45 @@
 #include <math.h>
 #include <stdlib.h>
 
-SDL_Window		*win;
-SDL_Renderer	*rend;
-ball			*b;
-
 static void	loop(global *g)
 {
 	SDL_Event	e;
+	SDL_Rect	pos;
+	SDL_Color	couleur = {0xFF,0,0,0xFF};
+	SDL_Surface	*text;
+	char		*level;
+	char		*score;
+	char		*fps;
+	clock_t		t;
 
-	SDL_SetRenderDrawColor(rend, 0x20, 0x20, 0x20, 0xFF);
-	SDL_RenderClear(rend);
-	while (SDL_PollEvent(&e))
-		if (e.type == SDL_QUIT
-				|| (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
-			exit (0);
-	draw(rend, &b, g);
-	SDL_UpdateWindowSurface(win);
-}
-
-static int	init(SDL_Surface *surface)
-{
-	SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-				"SDL_Init fail : %s\n", SDL_GetError());
-		return (1);
+	while (TRUE) {
+		t = clock();
+		SDL_SetRenderDrawColor(g->rend, 0x20, 0x20, 0x20, 0xFF);
+		SDL_RenderClear(g->rend);
+		while (SDL_PollEvent(&e))
+			if (e.type == SDL_QUIT
+					|| (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
+				return ;
+		draw(g);
+		pos.x = 0;
+		pos.y = 0;
+		level = ft_strdup("Level ");
+		score = ft_itoa(g->nBall);
+		level = ft_strextjoin(level, score);
+		text = TTF_RenderText_Solid(g->score_font, level, couleur);
+		SDL_BlitSurface(text, NULL, g->surface, &pos);
+		SDL_FreeSurface(text);
+		ft_strdel(&level);
+		ft_strdel(&score);
+		fps = ft_itoa((double) 1 /((double)(clock() - t) / (double)CLOCKS_PER_SEC));
+		text = TTF_RenderText_Solid(g->score_font, fps, couleur);
+		pos.x = WIN_WIDTH - text->w;
+		pos.y = 0;
+		SDL_BlitSurface(text, NULL, g->surface, &pos);
+		SDL_FreeSurface(text);
+		ft_strdel(&fps);
+		SDL_UpdateWindowSurface(g->win);
 	}
-	win = SDL_CreateWindow("Too Many Balls", 0, 0,
-			WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_FULLSCREEN_DESKTOP);
-	if(!win) {
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-				"Window creation fail : %s\n",SDL_GetError());
-		return (1);
-	}
-	surface = SDL_GetWindowSurface(win);
-	rend = SDL_CreateSoftwareRenderer(surface);
-	if(!rend) {
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-				"Render creation for surface fail : %s\n",SDL_GetError());
-		return (1);
-	}
-	return (0);
 }
 
 static int	**initGrid()
@@ -55,29 +53,69 @@ static int	**initGrid()
 	for (i = 0; i < NCASE_H; i++) {
 		ft_assert(grid[i] = (int *)malloc(sizeof(int *) * NCASE_W));
 		for (j = 0; j < NCASE_W; j++) {
-			grid[i][j] = (i > NCASE_H / 2) ? 0 : random() % (NCASE_H - i) + 15;
+			grid[i][j] = random() % (NCASE_H - i) + 15;
 		}
 	}
 	grid[i] = NULL;
 	return (grid);
 }
 
+static int	init(global *g)
+{
+	SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
+	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+				"SDL_Init fail : %s\n", SDL_GetError());
+		return (1);
+	}
+	g->win = SDL_CreateWindow("Too Many Balls", 0, 0,
+			WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	if(!g->win) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+				"Window creation fail : %s\n",SDL_GetError());
+		return (1);
+	}
+	g->surface = SDL_GetWindowSurface(g->win);
+	g->rend = SDL_CreateSoftwareRenderer(g->surface);
+	if(!g->rend) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+				"Render creation for surface fail : %s\n",SDL_GetError());
+		return (1);
+	}
+	if (TTF_Init() < 0) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+				"TTF_Init fail : %s\n",TTF_GetError());
+		return (1);
+	}
+	if (!(g->score_font = TTF_OpenFont("fonts/ArcadeClassic.ttf", 65))) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+				"TTF_OpenFont fail : %s\n",TTF_GetError());
+		return (1);
+	}
+	if (!(g->case_font = TTF_OpenFont("fonts/PixelSplitter-Bold.ttf", 20))) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+				"TTF_OpenFont fail : %s\n",TTF_GetError());
+		return (1);
+	}
+	g->nBall	= 0;
+	g->score	= 0;
+	g->grid = initGrid();
+	return (0);
+}
+
 int			main(void)
 {
-	SDL_Surface		*surface = NULL;
 	global			g;
 
-	if (init(surface))
+	if (init(&g))
 		exit(1);
-	g.nBall	= 0;
-	g.score	= 0;
-	g.grid = initGrid();
-	while (TRUE)
-		loop(&g);
+	loop(&g);
+	TTF_CloseFont(g.score_font);
+	TTF_CloseFont(g.case_font);
+	TTF_Quit();
 	for (int i = 0; i < NCASE_H; i++) {
 		free(g.grid[i]);
 	}
 	free(g.grid);
-	free(b);
 	return (0);
 }
