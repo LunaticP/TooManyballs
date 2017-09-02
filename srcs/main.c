@@ -68,17 +68,18 @@ static unsigned int	**initGrid()
 	unsigned int	**grid;
 
 	ft_assert(grid = (unsigned int **)malloc(sizeof(unsigned int **) * (NCASE_H + 1)));
-	for (i = 0; i < NCASE_H - 5; i++) {
+	ft_assert(grid[0] = (unsigned int *)malloc(sizeof(unsigned int *) * NCASE_W));
+	for (j = 0; j < NCASE_W; j++)
+		grid[0][j] = 0;
+	for (i = 1; i < NCASE_H - 10; i++) {
 		ft_assert(grid[i] = (unsigned int *)malloc(sizeof(unsigned int *) * NCASE_W));
-		for (j = 0; j < NCASE_W; j++) {
-			grid[i][j] = random() % (NCASE_H - i) + 150;
-		}
+		for (j = 0; j < NCASE_W; j++)
+			grid[i][j] = random() % (2);
 	}
-	for (i = NCASE_H - 5; i < NCASE_H; i++) {
+	for (i = NCASE_H - 10; i < NCASE_H; i++) {
 		ft_assert(grid[i] = (unsigned int *)malloc(sizeof(unsigned int *) * NCASE_W));
-		for (j = 0; j < NCASE_W; j++) {
+		for (j = 0; j < NCASE_W; j++)
 			grid[i][j] = 0;
-		}
 	}
 	grid[i] = NULL;
 	return (grid);
