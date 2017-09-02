@@ -6,11 +6,11 @@ static void	moveGridDown(global *g)
 	unsigned int	*tmp;
 
 	tmp = g->grid[NCASE_H - 1];
-	for (i = 0; i < NCASE_W; i++)
+/*	for (i = 0; i < NCASE_W; i++)
 		if (tmp[i] != 0) {
 			ft_putendl("You lost !");
 			exit(EXIT_SUCCESS);
-		}
+		}*/
 	for (i = NCASE_H - 1; i > 0; i--)
 		g->grid[i] = g->grid[i - 1];
 	g->grid[0] = tmp;
@@ -20,10 +20,18 @@ static void	moveGridDown(global *g)
 	}
 }
 
+
 void		nextTurn(global *g)
 {
 	if (!(g->inTurn))
 		return ;
+	for (unsigned int i = 0; i <= g->nBall; i++) {
+		if ((g->b)[i].state == e_NULL)
+			break;
+		if ((g->b)[i].state != e_TERMINATED)
+			resetBall(&(g->b[i]));
+	}
+	g->nLaunchedBalls = 0;
 	g->nBall++;
 	g->turn++;
 	g->inTurn = 0;

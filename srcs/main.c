@@ -81,7 +81,7 @@ static unsigned int	**initGrid()
 		for (j = 0; j < NCASE_W; j++)
 			grid[i][j] = 0;
 	}
-	grid[i] = NULL;
+	grid[NCASE_H] = NULL;
 	return (grid);
 }
 
@@ -124,8 +124,8 @@ static int			init(global *g)
 	}
 	g->nBall = 1;
 	ft_assert(g->b = (ball*)malloc(sizeof(ball) * (g->nBall + 1)));
-	g->b->state = 0;
-	(g->b + 1)->state = 2;
+	g->b->state = e_INACTIVE;
+	(g->b + 1)->state = e_NULL;
 	g->nLaunchedBalls = 0;
 	g->score = 0;
 	g->turn = 1;
@@ -144,9 +144,8 @@ int					main(void)
 	TTF_CloseFont(g.score_font);
 	TTF_CloseFont(g.case_font);
 	TTF_Quit();
-	for (int i = 0; i < NCASE_H; i++) {
+	for (int i = 0; i < NCASE_H; i++)
 		free(g.grid[i]);
-	}
 	free(g.grid);
 	return (0);
 }

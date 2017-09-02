@@ -7,7 +7,7 @@ void			resetBall(ball *b)
 	b->pos.y = BOX_HEIGHT;
 	b->dir.x = 0.0f;
 	b->dir.y = 0.0f;
-	b->state = 3;
+	b->state = e_TERMINATED;
 }
 
 float			distBall(ball b)
@@ -36,7 +36,7 @@ static void	drawCircle(vec2 p, float rad, global *g)
 }
 */
 
-inline float	dot(vec2 dirA, vec2 dirB)
+static inline float	dot(vec2 dirA, vec2 dirB)
 {
 	return(dirA.x * dirB.x + dirA.y * dirB.y);
 }
@@ -111,9 +111,9 @@ static void	checkTile(ball *b, global *g)
 void		balls(ball *b, global *g)
 {
 	for (unsigned int i = 0; i < g->nBall; i++) {
-		if (i != 0 && b[i].state == 0) {
+		if (i != 0 && b[i].state == e_INACTIVE) {
 			if (distBall(b[i - 1]) > 50) {
-				b[i].state = 1;
+				b[i].state = e_ACTIVE;
 				g->nLaunchedBalls++;
 			}
 			break;
