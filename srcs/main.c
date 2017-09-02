@@ -123,6 +123,7 @@ static int			init(global *g)
 	}
 	g->nBall = 1;
 	ft_assert(g->b = (ball*)malloc(sizeof(ball) * g->nBall));
+	g->b->state = 2;
 	g->nLaunchedBalls = 0;
 	g->score = 0;
 	g->turn = 1;

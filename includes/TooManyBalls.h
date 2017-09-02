@@ -16,7 +16,7 @@
 # define CASE_HEIGHT	(BOX_HEIGHT / NCASE_H)
 # define MARGIN			((WIN_WIDTH - BOX_WIDTH) / 2)
 
-# define SPEED			8.0f
+# define SPEED			5.0f
 
 
 # define TRUE			1

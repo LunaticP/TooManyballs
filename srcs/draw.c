@@ -5,7 +5,7 @@ static void	draw_score(global *g, SDL_Rect rect, int score)
 	SDL_Color	couleur = {0x00,0x00,0xFF,0xFF};
 	SDL_Surface	*text;
 	SDL_Rect	dst;
-	char				*force;
+	char		*force;
 
 	force = ft_itoa(score);
 	text = TTF_RenderText_Blended(g->case_font, force, couleur);
@@ -34,7 +34,7 @@ static void	draw_rect(global *g)
 				SDL_RenderFillRect(g->rend, &rect);
 				//SDL_SetRenderDrawColor(g->rend, 0, 0, 0, 0xFF);
 				//SDL_RenderDrawRect(g->rend, &rect);
-				draw_score(g, rect, g->grid[col][block]);
+//				draw_score(g, rect, g->grid[col][block]);
 			}
 		}
 	}
@@ -67,12 +67,13 @@ static void	drawBalls(SDL_Renderer *rend, ball *b, global g)
 
 static void	startBalls(ball **b, vec2 m, global *g)
 {
-	for (unsigned int i = 0; i < g->nBall; i++)
-		if ((*b)[i].state == 1) {
+	for (unsigned int i = 0; i <= g->nBall; i++) {
+		if ((*b)[i].state == 2)
+			break;
+		else if ((*b)[i].state == 1)
 			return;
-		}
-	g->nLaunchedBalls = 1;
-	ft_assert(*b = (ball*)malloc(sizeof(ball) * g->nBall));
+	}
+	ft_assert(*b = (ball*)malloc(sizeof(ball) * (g->nBall + 1)));
 	for (unsigned int i = 0; i < g->nBall; i++) {
  		(*b)[i].pos.x = WIN_WIDTH / 2;
 		(*b)[i].pos.y = BOX_HEIGHT;
@@ -80,7 +81,10 @@ static void	startBalls(ball **b, vec2 m, global *g)
 		(*b)[i].dir.y = m.y;
 		(*b)[i].state = 0;
 	}
+	(*b)[g->nBall].state = 2;
 	g->inTurn = 1;
+	g->nLaunchedBalls = 1;
+	//(*b)[0].state = 1;
 }
 
 void	draw(global *g)
