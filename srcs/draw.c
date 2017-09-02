@@ -1,23 +1,34 @@
 #include "TooManyBalls.h"
 
-static void	draw_rect(SDL_Renderer *rend, int **grid)
+static void caca(global *g, char *force, SDL_Rect rect, SDL_Color couleur, int col, int block)
+{
+	SDL_SetRenderDrawColor(g->rend,
+			(Uint8)(255 - g->grid[col][block] * 3.4f),
+			(Uint8)(g->grid[col][block] * 3.4f),
+			(Uint8)(255 - g->grid[col][block] * 3.4f), 0xFF);
+	rect.x = (block * CASE_WIDTH) + (WIN_WIDTH - BOX_WIDTH) / 2;
+	SDL_RenderFillRect(g->rend, &rect);
+	SDL_SetRenderDrawColor(g->rend, 0, 0, 0, 0xFF);
+	SDL_RenderDrawRect(g->rend, &rect);
+	force = ft_itoa(g->grid[col][block]);
+	SDL_BlitSurface(TTF_RenderText_Solid(g->case_font, force, couleur),
+			NULL, g->surface, &rect);
+	ft_strdel(&force);
+}
+
+static void	draw_rect(global *g)
 {
 	SDL_Rect	rect;
+	char		*force;
+	SDL_Color	couleur = {0x00,0x00,0xFF,0xFF};
 
 	rect.w = CASE_WIDTH;
 	rect.h = CASE_HEIGHT;
 	for (int col = 0; col < NCASE_H; col++) {
 		rect.y = (col * CASE_HEIGHT) + 10;
 		for(int block = 0; block < NCASE_W; block++) {
-			if (grid[col][block] > 0) {
-				SDL_SetRenderDrawColor(rend,
-					(Uint8)(255 - grid[col][block] * 3.4f),
-					(Uint8)(grid[col][block] * 3.4f),
-					(Uint8)(255 - grid[col][block] * 3.4f), 0xFF);
-				rect.x = (block * CASE_WIDTH) + (WIN_WIDTH - BOX_WIDTH) / 2;
-				SDL_RenderFillRect(rend, &rect);
-				SDL_SetRenderDrawColor(rend, 0, 0, 0, 0xFF);
-				SDL_RenderDrawRect(rend, &rect);
+			if (g->grid[col][block] > 0) {
+				caca(g, force, rect, couleur, col, block);
 			}
 		}
 	}
@@ -53,8 +64,7 @@ static void	startBalls(ball **b, vec2 m, global *g)
 	for (int i = 0; i < g->nBall; i++)
 		if ((*b)[i].state == 1)
 			return;
-	g->nBall *= 2;
-	g->nBall ++;
+	g->nBall += 5;
 	ft_assert(*b = (ball*)malloc(sizeof(ball) * g->nBall));
 	for (int i = 0; i < g->nBall; i++) {
  		(*b)[i].pos.x = WIN_WIDTH / 2;
@@ -80,7 +90,7 @@ void	draw(global *g)
 	l = sqrt((m.x * m.x) + (m.y * m.y));
 	m.x /= l;
 	m.y /= l;
-	draw_rect(g->rend, g->grid);
+	draw_rect(g);
 	draw_ray(g->rend, m);
 	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
 		startBalls(&(g->b), m, g);
