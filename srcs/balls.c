@@ -30,7 +30,7 @@ static void	drawCircle(vec2 p, float rad, global *g)
 	dir.x = 1.0;
 	dir.y = 0.0;
 	SDL_SetRenderDrawColor(g->rend, 0x00, 0xFF, 0x00, 0xFF);
-	for(int a = 0; a < 360; a++) {
+	for(float a = 0; a < 360; a++) {
 		dir.x = dir.x * cos(a * M_PI / 180.0f) - dir.y * sin(a * M_PI / 180.0f);
 		dir.y = dir.x * sin(a * M_PI / 180.0f) + dir.y * cos(a * M_PI / 180.0f);
 		SDL_RenderDrawPoint(g->rend, p.x + (dir.x * rad), p.y + (dir.y * rad));
