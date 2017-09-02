@@ -7,7 +7,7 @@ void			resetBall(ball *b)
 	b->pos.y = BOX_HEIGHT;
 	b->dir.x = 0.0f;
 	b->dir.y = 0.0f;
-	b->state = 0;
+	b->state = 3;
 }
 
 float			distBall(ball b)
@@ -36,7 +36,27 @@ static void	drawCircle(vec2 p, float rad, global *g)
 }
 */
 
-static int	checkTile(ball *b, global *g)
+inline float	dot(vec2 dirA, vec2 dirB)
+{
+	return(dirA.x * dirB.x + dirA.y * dirB.y);
+}
+
+static int		lrud(vec2 dir)
+{
+	vec2 compass[4] = {(vec2){0.0f, 1.0f},(vec2){1.0f, 0.0f},(vec2){0.0f, -1.0f},(vec2){-1.0f, 0.0f}};
+	float max = 0.0f;
+	unsigned int bestMatch = -1;
+	for (unsigned int i = 0; i < 4; i++) {
+		float dotProduct = dot(dir, compass[i]);
+		if (dotProduct > max) {
+			max = dotProduct;
+			bestMatch = i;
+		}
+	}
+	return bestMatch;
+}
+
+static void	checkTile(ball *b, global *g)
 {
 	vec2	block;
 	vec2	diff;
@@ -64,16 +84,28 @@ static int	checkTile(ball *b, global *g)
 				float y = fabs(b->pos.y - 10 - diff.y);
 				if (sqrt((x * x) + (y * y)) <= 20.0f) {
 					g->grid[i][j]--;
-					if(fabs(nearest.x) == CASE_WIDTH / 2.0f)
-						b->dir.x *= -1.0f;
-					else if(fabs(nearest.y) == CASE_HEIGHT / 2.0f)
-						b->dir.y *= -1.0f;
-				//	return (1);
+					float	penetration;
+					int		dir = lrud(b->dir);
+					if (dir == 0 || dir == 1) {
+						penetration = 20.0f - fabs(diff.x);
+						b->pos.x = -(b->pos.x);
+						if (dir == 0)
+							b->pos.x += penetration;
+						else
+							b->pos.x -= penetration;
+					}
+					if (dir == 2 || dir == 3) {
+						penetration = 20.0f - fabs(diff.y);
+						b->pos.y = -(b->pos.y);
+						if (dir == 2)
+							b->pos.y -= penetration;
+						else
+							b->pos.y += penetration;
+					}
 				}
 			}
 		}
 	}
-	return (0);
 }
 
 void		balls(ball *b, global *g)
@@ -84,7 +116,7 @@ void		balls(ball *b, global *g)
 				b[i].state = 1;
 				g->nLaunchedBalls++;
 			}
-			continue;
+			break;
 		}
 		if (b[i].pos.x + b[i].dir.x * SPEED > (WIN_WIDTH + BOX_WIDTH) / 2 - 5 ||
 			b[i].pos.x + b[i].dir.x * SPEED < (WIN_WIDTH - BOX_WIDTH) / 2 + 5)
@@ -93,7 +125,8 @@ void		balls(ball *b, global *g)
 			b[i].dir.y *= -1.0f;
 		b[i].pos.x += b[i].dir.x * SPEED;
 		b[i].pos.y -= b[i].dir.y * SPEED;
-		if (b[i].pos.y > BOX_HEIGHT || checkTile(&(b[i]), g)) {
+		checkTile(&(b[i]), g);
+		if (b[i].pos.y > BOX_HEIGHT) {
 			resetBall(&(b[i]));
 			g->nLaunchedBalls--;
 		}

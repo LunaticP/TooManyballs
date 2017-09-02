@@ -68,12 +68,10 @@ static void	drawBalls(SDL_Renderer *rend, ball *b, global g)
 static void	startBalls(vec2 m, global *g)
 {
 	for (unsigned int i = 0; i <= g->nBall; i++) {
-		if ((g->b)[i].state != 0) {
-			if ((g->b)[i].state == 1)
-				return;
-			else
-				break;
-		}
+		if ((g->b)[i].state == 1)
+			return;
+		if ((g->b)[i].state == 2)
+			break;
 	}
 	ft_assert(g->b = (ball*)malloc(sizeof(ball) * (g->nBall + 1)));
 	for (unsigned int i = 0; i < g->nBall; i++) {
