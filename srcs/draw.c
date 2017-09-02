@@ -48,7 +48,7 @@ static void	draw_rect(global *g)
 			if (g->grid[col][block] > 0) {
 				rect.x = (block * CASE_WIDTH) + (WIN_WIDTH - BOX_WIDTH) / 2;
 				SDL_RenderCopy(g->rend, tex[rect.y % 3], NULL, &rect);
-				//draw_score(g, rect, g->grid[col][block]);
+				draw_score(g, rect, g->grid[col][block]);
 			}
 		}
 	}
@@ -85,21 +85,22 @@ static void	drawBalls(SDL_Renderer *rend, ball *b, global g)
 static void	startBalls(vec2 m, global *g)
 {
 	for (unsigned int i = 0; i <= g->nBall; i++) {
-		if ((g->b)[i].state == 1)
+		if ((g->b)[i].state == e_ACTIVE)
 			return;
-		if ((g->b)[i].state == 2)
+		if ((g->b)[i].state == e_NULL)
 			break;
 	}
+	free(g->b);
 	ft_assert(g->b = (ball*)malloc(sizeof(ball) * (g->nBall + 1)));
 	for (unsigned int i = 0; i < g->nBall; i++) {
 		(g->b)[i].pos.x = WIN_WIDTH / 2;
 		(g->b)[i].pos.y = BOX_HEIGHT;
 		(g->b)[i].dir.x = m.x;
 		(g->b)[i].dir.y = m.y;
-		(g->b)[i].state = 0;
+		(g->b)[i].state = e_INACTIVE;
 	}
-	(g->b)[0].state = 1;
-	(g->b)[g->nBall].state = 2;
+	(g->b)[0].state = e_ACTIVE;
+	(g->b)[g->nBall].state = e_NULL;
 	g->inTurn = 1;
 	g->nLaunchedBalls = 1;
 }
@@ -124,10 +125,11 @@ void	draw(global *g)
 		balls(g->b, g);
 		drawBalls(g->rend, g->b, *g);
 	}
-	if (g->nLaunchedBalls == 0)
+	if (g->nLaunchedBalls == 0 || (click & SDL_BUTTON(SDL_BUTTON_RIGHT))) {
 		nextTurn(g);
-	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
-		startBalls(m, g);
+		if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
+			startBalls(m, g);
+	}
 	box.w = BOX_WIDTH;
 	box.h = BOX_HEIGHT;
 	box.x = (WIN_WIDTH - BOX_WIDTH) / 2;
