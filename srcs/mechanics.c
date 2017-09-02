@@ -9,7 +9,8 @@ static void	moveGridDown(global *g)
 	for (i = 0; i < NCASE_W; i++)
 		if (tmp[i] != 0) {
 			ft_putendl("You lost !");
-			exit(EXIT_SUCCESS); }
+			exit(EXIT_SUCCESS);
+		}
 	for (i = NCASE_H - 1; i > 0; i--)
 		g->grid[i] = g->grid[i - 1];
 	g->grid[0] = tmp;
