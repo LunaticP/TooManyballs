@@ -7,6 +7,7 @@ static void	loop(global *g)
 	SDL_Event	e;
 	SDL_Rect	pos;
 	SDL_Color	couleur = {0xFF,0,0,0xFF};
+	SDL_Surface	*text;
 	char		*level;
 	char		*score;
 
@@ -23,11 +24,12 @@ static void	loop(global *g)
 		level = ft_strdup("Level ");
 		score = ft_itoa(g->nBall);
 		level = ft_strextjoin(level, score);
-		SDL_BlitSurface(TTF_RenderText_Solid(g->score_font, level, couleur),
-				NULL, g->surface, &pos);
-		SDL_UpdateWindowSurface(g->win);
+		text = TTF_RenderText_Solid(g->score_font, level, couleur);
+		SDL_BlitSurface(text, NULL, g->surface, &pos);
+		SDL_FreeSurface(text);
 		ft_strdel(&level);
 		ft_strdel(&score);
+		SDL_UpdateWindowSurface(g->win);
 	}
 }
 

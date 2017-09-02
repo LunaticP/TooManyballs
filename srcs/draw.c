@@ -1,26 +1,23 @@
 #include "TooManyBalls.h"
-
-static void caca(global *g, char *force, SDL_Rect rect, SDL_Color couleur, int col, int block)
+static void	draw_score(global *g, SDL_Rect rect, int score)
 {
-	SDL_SetRenderDrawColor(g->rend,
-			(Uint8)(255 - g->grid[col][block] * 3.4f),
-			(Uint8)(g->grid[col][block] * 3.4f),
-			(Uint8)(255 - g->grid[col][block] * 3.4f), 0xFF);
-	rect.x = (block * CASE_WIDTH) + (WIN_WIDTH - BOX_WIDTH) / 2;
-	SDL_RenderFillRect(g->rend, &rect);
-	SDL_SetRenderDrawColor(g->rend, 0, 0, 0, 0xFF);
-	SDL_RenderDrawRect(g->rend, &rect);
-	force = ft_itoa(g->grid[col][block]);
-	SDL_BlitSurface(TTF_RenderText_Solid(g->case_font, force, couleur),
-			NULL, g->surface, &rect);
+	SDL_Color	couleur = {0x00,0x00,0xFF,0xFF};
+	SDL_Surface	*text;
+	SDL_Rect	dst;
+	char				*force;
+
+	force = ft_itoa(score);
+	text = TTF_RenderText_Blended(g->case_font, force, couleur);
+	dst.x = rect.x + CASE_WIDTH / 2 - text->w / 2;
+	dst.y = rect.y + CASE_HEIGHT / 2 - text->h / 2;
+	SDL_BlitSurface(text, NULL, g->surface, &dst);
+	SDL_FreeSurface(text);
 	ft_strdel(&force);
 }
 
 static void	draw_rect(global *g)
 {
 	SDL_Rect	rect;
-	char		*force;
-	SDL_Color	couleur = {0x00,0x00,0xFF,0xFF};
 
 	rect.w = CASE_WIDTH;
 	rect.h = CASE_HEIGHT;
@@ -28,7 +25,15 @@ static void	draw_rect(global *g)
 		rect.y = (col * CASE_HEIGHT) + 10;
 		for(int block = 0; block < NCASE_W; block++) {
 			if (g->grid[col][block] > 0) {
-				caca(g, force, rect, couleur, col, block);
+				SDL_SetRenderDrawColor(g->rend,
+					(Uint8)(255 - g->grid[col][block] * 3.4f),
+					(Uint8)(g->grid[col][block] * 3.4f),
+					(Uint8)(255 - g->grid[col][block] * 3.4f), 0xFF);
+				rect.x = (block * CASE_WIDTH) + (WIN_WIDTH - BOX_WIDTH) / 2;
+				SDL_RenderFillRect(g->rend, &rect);
+				SDL_SetRenderDrawColor(g->rend, 0, 0, 0, 0xFF);
+				SDL_RenderDrawRect(g->rend, &rect);
+				draw_score(g, rect, g->grid[col][block]);
 			}
 		}
 	}
