@@ -39,7 +39,8 @@ typedef struct	global
 	SDL_Surface		*surface;
 	SDL_Window		*win;
 	SDL_Renderer	*rend;
-	TTF_Font		*font;
+	TTF_Font		*score_font;
+	TTF_Font		*case_font;
 	ball			*b;
 	int 			nBall;
 	int				score;

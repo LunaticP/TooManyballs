@@ -5,6 +5,10 @@
 static void	loop(global *g)
 {
 	SDL_Event	e;
+	SDL_Rect	pos;
+	SDL_Color	couleur = {0xFF,0,0,0xFF};
+	char		*level;
+	char		*score;
 
 	while (TRUE) {
 		SDL_SetRenderDrawColor(g->rend, 0x20, 0x20, 0x20, 0xFF);
@@ -14,7 +18,16 @@ static void	loop(global *g)
 					|| (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
 				return ;
 		draw(g);
+		pos.x = 0;
+		pos.y = 0;
+		level = ft_strdup("Level ");
+		score = ft_itoa(g->nBall);
+		level = ft_strextjoin(level, score);
+		SDL_BlitSurface(TTF_RenderText_Solid(g->score_font, level, couleur),
+				NULL, g->surface, &pos);
 		SDL_UpdateWindowSurface(g->win);
+		ft_strdel(&level);
+		ft_strdel(&score);
 	}
 }
 
@@ -62,6 +75,16 @@ static int	init(global *g)
 				"TTF_Init fail : %s\n",TTF_GetError());
 		return (1);
 	}
+	if (!(g->score_font = TTF_OpenFont("fonts/ArcadeClassic.ttf", 65))) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+				"TTF_OpenFont fail : %s\n",TTF_GetError());
+		return (1);
+	}
+	if (!(g->case_font = TTF_OpenFont("fonts/PixelSplitter-Bold.ttf", 20))) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+				"TTF_OpenFont fail : %s\n",TTF_GetError());
+		return (1);
+	}
 	g->nBall	= 0;
 	g->score	= 0;
 	g->grid = initGrid();
@@ -75,6 +98,8 @@ int			main(void)
 	if (init(&g))
 		exit(1);
 	loop(&g);
+	TTF_CloseFont(g.score_font);
+	TTF_CloseFont(g.case_font);
 	TTF_Quit();
 	for (int i = 0; i < NCASE_H; i++) {
 		free(g.grid[i]);
