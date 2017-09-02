@@ -85,8 +85,10 @@ void		balls(ball *b, global *g)
 {
 	for (int i = 0; i < g->nBall; i++) {
 		if (i != 0 && b[i].state == 0) {
-			if (distBall(b[i - 1]) > 50)
+			if (distBall(b[i - 1]) > 50) {
 				b[i].state = 1;
+				g->nLaunchedBalls++;
+			}
 			continue;
 		}
 		if (b[i].pos.x + b[i].dir.x * SPEED > (WIN_WIDTH + BOX_WIDTH) / 2 - 5 ||
@@ -96,7 +98,9 @@ void		balls(ball *b, global *g)
 			b[i].dir.y *= -1.0f;
 		b[i].pos.x += b[i].dir.x * SPEED;
 		b[i].pos.y -= b[i].dir.y * SPEED;
-		if (b[i].pos.y > BOX_HEIGHT || checkTile(&(b[i]), g))
+		if (b[i].pos.y > BOX_HEIGHT || checkTile(&(b[i]), g)) {
 			resetBall(&(b[i]));
+			g->nLaunchedBalls--;
+		}
 	}
 }

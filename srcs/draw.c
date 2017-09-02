@@ -70,7 +70,8 @@ static void	startBalls(ball **b, vec2 m, global *g)
 	for (int i = 0; i < g->nBall; i++)
 		if ((*b)[i].state == 1)
 			return;
-	g->nBall = 1;
+	g->nBall ++;
+	g->nLaunchedBalls = 1;
 	ft_assert(*b = (ball*)malloc(sizeof(ball) * g->nBall));
 	for (int i = 0; i < g->nBall; i++) {
  		(*b)[i].pos.x = WIN_WIDTH / 2;
@@ -100,8 +101,10 @@ void	draw(global *g)
 	draw_ray(g->rend, m);
 	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
 		startBalls(&(g->b), m, g);
-	balls(g->b, g);
-	drawBalls(g->rend, g->b, *g);
+	if (g->nLaunchedBalls) {
+		balls(g->b, g);
+		drawBalls(g->rend, g->b, *g);
+	}
 	box.w = BOX_WIDTH;
 	box.h = BOX_HEIGHT;
 	box.x = (WIN_WIDTH - BOX_WIDTH) / 2;
