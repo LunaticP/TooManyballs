@@ -53,7 +53,7 @@ static int	checkTile(ball *b, global *g)
 
 	for (int i = ball_line - 50; i < ball_line + 50; i++) {
 		for (int j = ball_col - 50; j < ball_col + 50; j++) {
-			if (i >= 0 && i < NCASE_H && j >= 0 && j < NCASE_W/* && g->grid[i][j] > 0*/)
+			if (i >= 0 && i < NCASE_H && j >= 0 && j < NCASE_W && g->grid[i][j] > 0)
 			{
 				block.x = (j * CASE_WIDTH) + (CASE_WIDTH / 2);
 				block.y = (i * CASE_HEIGHT) + (CASE_HEIGHT / 2);
