@@ -6,16 +6,18 @@ static void	draw_rect(SDL_Renderer *rend, int **grid)
 
 	rect.w = CASE_WIDTH;
 	rect.h = CASE_HEIGHT;
-		for (int col = 0; col < NCASE_H; col++) {
-		rect.y = (col * (rect.h + 10)) + NCASE_W;
+	for (int col = 0; col < NCASE_H; col++) {
+		rect.y = (col * CASE_HEIGHT) + 10;
 		for(int block = 0; block < NCASE_W; block++) {
 			if (grid[col][block] > 0) {
 				SDL_SetRenderDrawColor(rend,
-				(Uint8)(255 - grid[col][block] * 10),
-				(Uint8)(grid[col][block] * 10),
-				(Uint8)(255 - grid[col][block] * 10), 0xFF);
-				rect.x = (block * (rect.w + 10)) + (WIN_WIDTH - BOX_WIDTH) / 2 + 10;
+					(Uint8)(255 - grid[col][block] * 3.4f),
+					(Uint8)(grid[col][block] * 3.4f),
+					(Uint8)(255 - grid[col][block] * 3.4f), 0xFF);
+				rect.x = (block * CASE_WIDTH) + (WIN_WIDTH - BOX_WIDTH) / 2;
 				SDL_RenderFillRect(rend, &rect);
+				SDL_SetRenderDrawColor(rend, 0, 0, 0, 0xFF);
+				SDL_RenderDrawRect(rend, &rect);
 			}
 		}
 	}
@@ -51,7 +53,8 @@ static void	startBalls(ball **b, vec2 m, global *g)
 	for (int i = 0; i < g->nBall; i++)
 		if ((*b)[i].state == 1)
 			return;
-	g->nBall++;
+	g->nBall *= 2;
+	g->nBall ++;
 	ft_assert(*b = (ball*)malloc(sizeof(ball) * g->nBall));
 	for (int i = 0; i < g->nBall; i++) {
  		(*b)[i].pos.x = WIN_WIDTH / 2;

@@ -10,9 +10,10 @@
 # define BOX_WIDTH		(WIN_WIDTH / 2)
 # define BOX_HEIGHT		(WIN_HEIGHT - 20)
 # define NCASE_W		20
-# define NCASE_H		25
-# define CASE_WIDTH		((BOX_WIDTH - 10) / NCASE_W - 10);
-# define CASE_HEIGHT	((BOX_HEIGHT / 2 - 10) / NCASE_H - 5);
+# define NCASE_H		40
+# define CASE_WIDTH		(BOX_WIDTH  / NCASE_W)
+# define CASE_HEIGHT	(BOX_HEIGHT / NCASE_H)
+# define MARGIN			((WIN_WIDTH - BOX_WIDTH) / 2)
 
 # define SPEED			8.0f
 
