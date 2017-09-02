@@ -31,9 +31,9 @@ static void	drawCircle(vec2 p, float rad, global *g)
 	dir.x = 1.0;
 	dir.y = 0.0;
 	SDL_SetRenderDrawColor(g->rend, 0x00, 0xFF, 0x00, 0xFF);
-	for(int a = 0; a < 720; a++) {
-		tmp.x = dir.x * cos(a * M_PI / 180.0f) - dir.y * sin(a * M_PI / 180.0f);
-		tmp.y = dir.x * sin(a * M_PI / 180.0f) + dir.y * cos(a * M_PI / 180.0f);
+	for(float a = -1800.0f; a < 1800.0f; a++) {
+		tmp.x = dir.x * cos(a * M_PI / 1800.0f) - dir.y * sin(a * M_PI / 1800.0f);
+		tmp.y = dir.x * sin(a * M_PI / 1800.0f) + dir.y * cos(a * M_PI / 1800.0f);
 		dir.x = tmp.x;
 		dir.y = tmp.y;
 		SDL_RenderDrawPoint(g->rend, p.x + (dir.x * rad), p.y + (dir.y * rad));
@@ -57,27 +57,15 @@ static int	checkTile(ball *b, global *g)
 			{
 				block.x = (j * CASE_WIDTH) + (CASE_WIDTH / 2);
 				block.y = (i * CASE_HEIGHT) + (CASE_HEIGHT / 2);
-				SDL_Rect r;
-				r.w = CASE_WIDTH;
-				r.h = CASE_HEIGHT;
-				r.x = block.x + MARGIN - CASE_WIDTH / 2;
-				r.y = block.y + 10 - CASE_HEIGHT / 2;
-				float x = b->pos.x - MARGIN - block.x;
-				float y = b->pos.y - 10 - block.y;
-/*				if (sqrt((x * x) + (y * y)) <= 100.0f)
-					SDL_SetRenderDrawColor(g->rend, 0x00, 0xFF, 0x00, 0xFF);
-				else
-					SDL_SetRenderDrawColor(g->rend, 0xFF, 0xFF, 0xFF, 0xFF);
-				SDL_RenderDrawRect(g->rend, &r);
 				drawCircle(b->pos, 100.0f, g);
-*/				diff.x = b->pos.x + MARGIN - block.x;
-				diff.y = b->pos.y + 10 - block.y;
+				diff.x = b->pos.x - MARGIN - block.x;
+				diff.y = b->pos.y - 10 - block.y;
 				nearest.x = clamp(diff.x, -(CASE_WIDTH / 2), CASE_WIDTH / 2);
 				nearest.y = clamp(diff.y, -(CASE_HEIGHT / 2), CASE_HEIGHT / 2);
 				diff.x = block.x + nearest.x;
 				diff.y = block.y + nearest.y;
-				x = b->pos.x - MARGIN - diff.x;
-				y = b->pos.y - 10 - diff.y;
+				float x = fabs(b->pos.x - MARGIN - diff.x);
+				float y = fabs(b->pos.y - 10 - diff.y);
 				if (sqrt((x * x) + (y * y)) <= 100.0f) {
 					g->grid[i][j] = 0;
 				//	return (1);
