@@ -16,7 +16,7 @@
 # define CASE_HEIGHT	(BOX_HEIGHT / NCASE_H)
 # define MARGIN			((WIN_WIDTH - BOX_WIDTH) / 2)
 
-# define SPEED			4.0f
+# define SPEED			8.0f
 
 
 # define TRUE			1
@@ -45,6 +45,8 @@ typedef struct	global
 	TTF_Font		*case_font;
 	ball			*b;
 	int 			nBall;
+	int				nLaunchedBalls;
+	int				turn;
 	int				score;
 	int				**grid;
 }					global;

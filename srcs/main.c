@@ -25,7 +25,7 @@ static void	loop(global *g)
 		pos.x = 0;
 		pos.y = 0;
 		level = ft_strdup("Level ");
-		score = ft_itoa(g->nBall);
+		score = ft_itoa(g->nLaunchedBalls);
 		level = ft_strextjoin(level, score);
 		text = TTF_RenderText_Solid(g->score_font, level, couleur);
 		SDL_BlitSurface(text, NULL, g->surface, &pos);
@@ -50,10 +50,16 @@ static int	**initGrid()
 	int		**grid;
 
 	ft_assert(grid = (int **)malloc(sizeof(int **) * (NCASE_H + 1)));
-	for (i = 0; i < NCASE_H; i++) {
+	for (i = 0; i < NCASE_H - 5; i++) {
 		ft_assert(grid[i] = (int *)malloc(sizeof(int *) * NCASE_W));
 		for (j = 0; j < NCASE_W; j++) {
 			grid[i][j] = random() % (NCASE_H - i) + 15;
+		}
+	}
+	for (i = NCASE_H - 5; i < NCASE_H; i++) {
+		ft_assert(grid[i] = (int *)malloc(sizeof(int *) * NCASE_W));
+		for (j = 0; j < NCASE_W; j++) {
+			grid[i][j] = 0;
 		}
 	}
 	grid[i] = NULL;
