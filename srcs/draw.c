@@ -5,7 +5,7 @@ static void	draw_score(global *g, SDL_Rect rect, int score)
 	SDL_Color	couleur = {0x00,0x00,0xFF,0xFF};
 	SDL_Surface	*text;
 	SDL_Rect	dst;
-	char				*force;
+	char		*force;
 
 	force = ft_itoa(score);
 	text = TTF_RenderText_Blended(g->case_font, force, couleur);
@@ -34,7 +34,7 @@ static void	draw_rect(global *g)
 				SDL_RenderFillRect(g->rend, &rect);
 				//SDL_SetRenderDrawColor(g->rend, 0, 0, 0, 0xFF);
 				//SDL_RenderDrawRect(g->rend, &rect);
-				draw_score(g, rect, g->grid[col][block]);
+//				draw_score(g, rect, g->grid[col][block]);
 			}
 		}
 	}
@@ -70,8 +70,8 @@ static void	startBalls(ball **b, vec2 m, global *g)
 	for (int i = 0; i < g->nBall; i++)
 		if ((*b)[i].state == 1)
 			return;
-	g->nBall ++;
-	g->nLaunchedBalls = 1;
+	g->nBall *= 2;
+	g->nBall++;
 	ft_assert(*b = (ball*)malloc(sizeof(ball) * g->nBall));
 	for (int i = 0; i < g->nBall; i++) {
  		(*b)[i].pos.x = WIN_WIDTH / 2;
@@ -80,7 +80,7 @@ static void	startBalls(ball **b, vec2 m, global *g)
 		(*b)[i].dir.y = m.y;
 		(*b)[i].state = 0;
 	}
-	(*b)[0].state = 1;
+	//(*b)[0].state = 1;
 }
 
 void	draw(global *g)
@@ -101,10 +101,8 @@ void	draw(global *g)
 	draw_ray(g->rend, m);
 	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
 		startBalls(&(g->b), m, g);
-	if (g->nLaunchedBalls) {
-		balls(g->b, g);
-		drawBalls(g->rend, g->b, *g);
-	}
+	balls(g->b, g);
+	drawBalls(g->rend, g->b, *g);
 	box.w = BOX_WIDTH;
 	box.h = BOX_HEIGHT;
 	box.x = (WIN_WIDTH - BOX_WIDTH) / 2;

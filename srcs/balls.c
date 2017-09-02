@@ -14,15 +14,9 @@ float			distBall(ball b)
 {
 	float xd = (WIN_WIDTH / 2) - b.pos.x;
 	float yd = BOX_HEIGHT - b.pos.y;
-
 	return (sqrt(xd * xd + yd * yd));
 }
-
-float		clamp(float val, float low, float high)
-{
-	return(ft_max(low, ft_min(high, val)));
-}
-
+/*
 static void	drawCircle(vec2 p, float rad, global *g)
 {
 	vec2	dir;
@@ -39,7 +33,7 @@ static void	drawCircle(vec2 p, float rad, global *g)
 		SDL_RenderDrawPoint(g->rend, p.x + (dir.x * rad), p.y + (dir.y * rad));
 	}
 }
-
+*/
 static int	checkTile(ball *b, global *g)
 {
 	vec2	block;
@@ -51,23 +45,27 @@ static int	checkTile(ball *b, global *g)
 	ball_col = ((int)b->pos.x - MARGIN) / CASE_WIDTH;
 	ball_line = ((int)b->pos.y - 10) / CASE_HEIGHT;
 
-	for (int i = ball_line - 50; i < ball_line + 50; i++) {
-		for (int j = ball_col - 50; j < ball_col + 50; j++) {
+	for (int i = ball_line - 10; i < ball_line + 10; i++) {
+		for (int j = ball_col - 10; j < ball_col + 10; j++) {
 			if (i >= 0 && i < NCASE_H && j >= 0 && j < NCASE_W && g->grid[i][j] > 0)
 			{
-				block.x = (j * CASE_WIDTH) + (CASE_WIDTH / 2);
-				block.y = (i * CASE_HEIGHT) + (CASE_HEIGHT / 2);
-				drawCircle(b->pos, 100.0f, g);
+				block.x = (j * CASE_WIDTH) + (CASE_WIDTH / 2.0f);
+				block.y = (i * CASE_HEIGHT) + (CASE_HEIGHT / 2.0f);
+				//drawCircle(b->pos, 20.0f, g);
 				diff.x = b->pos.x - MARGIN - block.x;
 				diff.y = b->pos.y - 10 - block.y;
-				nearest.x = clamp(diff.x, -(CASE_WIDTH / 2), CASE_WIDTH / 2);
-				nearest.y = clamp(diff.y, -(CASE_HEIGHT / 2), CASE_HEIGHT / 2);
+				nearest.x = ft_max(-(CASE_WIDTH / 2.0f), ft_min(CASE_WIDTH / 2.0f, diff.x));
+				nearest.y = ft_max(-(CASE_HEIGHT / 2.0f), ft_min(CASE_HEIGHT / 2.0f, diff.y));
 				diff.x = block.x + nearest.x;
 				diff.y = block.y + nearest.y;
 				float x = fabs(b->pos.x - MARGIN - diff.x);
 				float y = fabs(b->pos.y - 10 - diff.y);
-				if (sqrt((x * x) + (y * y)) <= 100.0f) {
-					g->grid[i][j] = 0;
+				if (sqrt((x * x) + (y * y)) <= 20.0f) {
+					g->grid[i][j]--;
+					if(fabs(nearest.x) == CASE_WIDTH / 2.0f)
+						b->dir.x *= -1.0f;
+					else if(fabs(nearest.y) == CASE_HEIGHT / 2.0f)
+						b->dir.y *= -1.0f;
 				//	return (1);
 				}
 			}
@@ -85,10 +83,8 @@ void		balls(ball *b, global *g)
 {
 	for (int i = 0; i < g->nBall; i++) {
 		if (i != 0 && b[i].state == 0) {
-			if (distBall(b[i - 1]) > 50) {
+			if (distBall(b[i - 1]) > 50)
 				b[i].state = 1;
-				g->nLaunchedBalls++;
-			}
 			continue;
 		}
 		if (b[i].pos.x + b[i].dir.x * SPEED > (WIN_WIDTH + BOX_WIDTH) / 2 - 5 ||
@@ -98,9 +94,7 @@ void		balls(ball *b, global *g)
 			b[i].dir.y *= -1.0f;
 		b[i].pos.x += b[i].dir.x * SPEED;
 		b[i].pos.y -= b[i].dir.y * SPEED;
-		if (b[i].pos.y > BOX_HEIGHT || checkTile(&(b[i]), g)) {
+		if (b[i].pos.y > BOX_HEIGHT || checkTile(&(b[i]), g))
 			resetBall(&(b[i]));
-			g->nLaunchedBalls--;
-		}
 	}
 }
