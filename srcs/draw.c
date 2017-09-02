@@ -34,7 +34,7 @@ static void	draw_rect(global *g)
 				SDL_RenderFillRect(g->rend, &rect);
 				//SDL_SetRenderDrawColor(g->rend, 0, 0, 0, 0xFF);
 				//SDL_RenderDrawRect(g->rend, &rect);
-//				draw_score(g, rect, g->grid[col][block]);
+				//draw_score(g, rect, g->grid[col][block]);
 			}
 		}
 	}
@@ -105,13 +105,14 @@ void	draw(global *g)
 	m.y /= l;
 	draw_rect(g);
 	draw_ray(g->rend, m);
-	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
-		startBalls(m, g);
 	if (g->nLaunchedBalls > 0) {
 		balls(g->b, g);
 		drawBalls(g->rend, g->b, *g);
-	} else
+	}
+	if (g->nLaunchedBalls == 0)
 		nextTurn(g);
+	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
+		startBalls(m, g);
 	box.w = BOX_WIDTH;
 	box.h = BOX_HEIGHT;
 	box.x = (WIN_WIDTH - BOX_WIDTH) / 2;
