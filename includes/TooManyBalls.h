@@ -9,13 +9,14 @@
 # define WIN_HEIGHT		1440
 # define BOX_WIDTH		(WIN_WIDTH / 2)
 # define BOX_HEIGHT		(WIN_HEIGHT - 20)
-# define NCASE_W		20
-# define NCASE_H		40
+# define NCASE_W		10
+# define NCASE_H		10
 # define CASE_WIDTH		(BOX_WIDTH  / NCASE_W)
 # define CASE_HEIGHT	(BOX_HEIGHT / NCASE_H)
 # define MARGIN			((WIN_WIDTH - BOX_WIDTH) / 2)
 
-# define SPEED			8.0f
+# define SPEED			4.0f
+
 
 # define TRUE			1
 # define FALSE			0
@@ -42,6 +43,6 @@ typedef struct	global
 }				global;
 
 void			draw(SDL_Renderer *rend, ball **ball, global *g);
-void			balls(ball *ball, global *g);
+void			balls(ball *ball, global *g, SDL_Renderer *rend);
 
 #endif

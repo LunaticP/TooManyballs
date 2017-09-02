@@ -1,4 +1,5 @@
 #include "TooManyBalls.h"
+#include <math.h>
 
 void			resetBall(ball *b)
 {
@@ -17,21 +18,64 @@ float			distBall(ball b)
 	return (sqrt(xd * xd + yd * yd));
 }
 
-void		checkTile(ball b, global *g)
+float		clamp(float val, float low, float high)
 {
-	int		ball_col;
-	int		ball_line;
-	int		*ball_case;
-
-	ball_line = ((int)b.pos.x - MARGIN) / CASE_WIDTH;
-	ball_col = ((int)b.pos.y - 10) / CASE_HEIGHT;
-	if ((ball_col >= 0 && ball_col < NCASE_H) &&
-			(ball_line >= 0 && ball_line < NCASE_W) &&
-			(*(ball_case = &(g->grid[ball_col][ball_line])) != 0))
-		(*ball_case)--;
+	return(ft_max(low, ft_min(high, val)));
 }
 
-void		balls(ball *b, global *g)
+static int	checkTile(ball *b, global *g, SDL_Renderer *rend)
+{
+	vec2	block;
+	vec2	diff;
+	vec2	nearest;
+	int		ball_line;
+	int		ball_col;
+
+	ball_col = ((int)b->pos.x - MARGIN) / CASE_WIDTH;
+	ball_line = ((int)b->pos.y - 10) / CASE_HEIGHT;
+
+	for (int i = ball_line - 50; i < ball_line + 50; i++) {
+		for (int j = ball_col - 50; j < ball_col + 50; j++) {
+			if (i >= 0 && i < NCASE_H && j >= 0 && j < NCASE_W/* && g->grid[i][j] > 0*/)
+			{
+				block.x = (j * CASE_WIDTH) + (CASE_WIDTH / 2);
+				block.y = (i * CASE_HEIGHT) + (CASE_HEIGHT / 2);
+				SDL_Rect r;
+				r.w = CASE_WIDTH;
+				r.h = CASE_HEIGHT;
+				r.x = block.x + MARGIN - CASE_WIDTH / 2;
+				r.y = block.y + 10 - CASE_HEIGHT / 2;
+				float x = b->pos.x - MARGIN - block.x;
+				float y = b->pos.y - 10 - block.y;
+				if (sqrt((x * x) + (y * y)) <= 100.0f)
+					SDL_SetRenderDrawColor(rend, 0x00, 0xFF, 0x00, 0xFF);
+				else
+					SDL_SetRenderDrawColor(rend, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_RenderDrawRect(rend, &r);
+				diff.x = b->pos.x + MARGIN - block.x;
+				diff.y = b->pos.y + 10 - block.y;
+				nearest.x = clamp(diff.x, -(CASE_WIDTH / 2), CASE_WIDTH / 2);
+				nearest.y = clamp(diff.y, -(CASE_HEIGHT / 2), CASE_HEIGHT / 2);
+				diff.x = block.x + nearest.x;
+				diff.y = block.y + nearest.y;
+				x = b->pos.x - MARGIN - diff.x;
+				y = b->pos.y - 10 - diff.y;
+				if (sqrt((x * x) + (y * y)) <= 100.0f) {
+					g->grid[i][j] = 0;
+				//	return (1);
+				}
+			}
+		}
+	}
+	return (0);
+
+/*	if ((ball_col >= 0 && ball_col < NCASE_H) &&
+ *			(ball_line >= 0 && ball_line < NCASE_W) &&
+ *			(*(ball_case = &(g->grid[ball_col][ball_line])) != 0))
+\*		(*ball_case)--;*/
+}
+
+void		balls(ball *b, global *g, SDL_Renderer *rend)
 {
 	for (int i = 0; i < g->nBall; i++) {
 		if (i != 0 && b[i].state == 0) {
@@ -46,8 +90,7 @@ void		balls(ball *b, global *g)
 			b[i].dir.y *= -1.0f;
 		b[i].pos.x += b[i].dir.x * SPEED;
 		b[i].pos.y -= b[i].dir.y * SPEED;
-		checkTile(b[i], g);
-		if (b[i].pos.y > BOX_HEIGHT)
+		if (b[i].pos.y > BOX_HEIGHT || checkTile(&(b[i]), g, rend))
 			resetBall(&(b[i]));
 	}
 }

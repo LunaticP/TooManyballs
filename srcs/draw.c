@@ -16,8 +16,8 @@ static void	draw_rect(SDL_Renderer *rend, int **grid)
 					(Uint8)(255 - grid[col][block] * 3.4f), 0xFF);
 				rect.x = (block * CASE_WIDTH) + (WIN_WIDTH - BOX_WIDTH) / 2;
 				SDL_RenderFillRect(rend, &rect);
-				SDL_SetRenderDrawColor(rend, 0, 0, 0, 0xFF);
-				SDL_RenderDrawRect(rend, &rect);
+			//	SDL_SetRenderDrawColor(rend, 0, 0, 0, 0xFF);
+			//	SDL_RenderDrawRect(rend, &rect);
 			}
 		}
 	}
@@ -84,7 +84,7 @@ void	draw(SDL_Renderer *rend, ball **b, global *g)
 	draw_ray(rend, m);
 	if (click & SDL_BUTTON(SDL_BUTTON_LEFT))
 		startBalls(b, m, g);
-	balls(*b, g);
+	balls(*b, g, rend);
 	drawBalls(rend, *b, *g);
 	box.w = BOX_WIDTH;
 	box.h = BOX_HEIGHT;
