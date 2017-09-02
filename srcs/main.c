@@ -10,8 +10,11 @@ static void	loop(global *g)
 	SDL_Surface	*text;
 	char		*level;
 	char		*score;
+	char		*fps;
+	clock_t		t;
 
 	while (TRUE) {
+		t = clock();
 		SDL_SetRenderDrawColor(g->rend, 0x20, 0x20, 0x20, 0xFF);
 		SDL_RenderClear(g->rend);
 		while (SDL_PollEvent(&e))
@@ -29,6 +32,13 @@ static void	loop(global *g)
 		SDL_FreeSurface(text);
 		ft_strdel(&level);
 		ft_strdel(&score);
+		fps = ft_itoa((double) 1 /((double)(clock() - t) / (double)CLOCKS_PER_SEC));
+		text = TTF_RenderText_Solid(g->score_font, fps, couleur);
+		pos.x = WIN_WIDTH - text->w;
+		pos.y = 0;
+		SDL_BlitSurface(text, NULL, g->surface, &pos);
+		SDL_FreeSurface(text);
+		ft_strdel(&fps);
 		SDL_UpdateWindowSurface(g->win);
 	}
 }

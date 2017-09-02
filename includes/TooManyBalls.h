@@ -3,6 +3,7 @@
 
 # include <SDL.h>
 # include <SDL_ttf.h>
+# include <time.h>
 # include "libft.h"
 
 # define WIN_WIDTH		2560
